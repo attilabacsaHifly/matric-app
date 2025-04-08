@@ -2,6 +2,7 @@ package com.appic.matricapp.ui.screens.initial
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.Absolute.SpaceBetween
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -30,12 +32,42 @@ fun InitialScreen(onSelectCountyVignettes: () -> Unit, onConfirmPurchase: () -> 
     val viewModel: InitialScreenViewModel = hiltViewModel()
     val state by viewModel.initialScreenState.collectAsState()
 
-    InitialScreenContent(state, onSelectCountyVignettes)
+    InitialScreenContent(state, { viewModel.loadScreen() }, onSelectCountyVignettes)
 }
 
 @Composable
 private fun InitialScreenContent(
     screenState: InitialScreenState,
+    loadScreen: () -> Unit,
+    onSelectCountyVignettes: () -> Unit
+) {
+    when (screenState) {
+        InitialScreenState.Created -> {
+            loadScreen()
+        }
+
+        InitialScreenState.Error -> {
+            InitialScreenErrorContent()
+        }
+
+        is InitialScreenState.Loaded -> {
+            InitialScreenLoadedContent(screenState.vehicleInfo, onSelectCountyVignettes)
+        }
+
+        InitialScreenState.Loading -> {
+            InitialScreenLoadingContent()
+        }
+    }
+}
+
+@Composable
+private fun InitialScreenLoadingContent() {
+    
+}
+
+@Composable
+private fun InitialScreenLoadedContent(
+    vehicleInfo: VehicleInfo,
     onSelectCountyVignettes: () -> Unit
 ) {
     Column(
@@ -60,8 +92,8 @@ private fun InitialScreenContent(
                     contentDescription = ""
                 )
                 Column {
-                    Text("ABC 123") // TODO
-                    Text("Michael Scott") // TODO
+                    Text(vehicleInfo.vehiclePlate)
+                    Text(vehicleInfo.vehicleOwnerName)
                 }
             }
         }
@@ -91,4 +123,9 @@ private fun InitialScreenContent(
             }
         }
     }
+}
+
+@Composable
+private fun InitialScreenErrorContent() {
+
 }
