@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MatricApp</string>
+
+    <string name="app_title">E-matrica</string>
+    <string name="country_vignettes">Országos matricák</string>
+    <string name="yearly_county_vignettes">Éves vármegyei matricák</string>
+    <string name="purchase">Vásárlás</string>
 </resources>

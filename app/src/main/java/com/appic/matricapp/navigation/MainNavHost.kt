@@ -7,6 +7,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -14,16 +15,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.appic.matricapp.R
 import com.appic.matricapp.ui.screens.countyvignettes.CountyVignettesScreen
 import com.appic.matricapp.ui.screens.initial.InitialScreen
 import com.appic.matricapp.ui.screens.purchaseconfirmation.PurchaseConfirmationScreen
 import com.appic.matricapp.ui.screens.purchasesuccess.PurchaseSuccessScreen
+import com.appic.matricapp.ui.theme.MatricappNavy
 
 @Composable
 fun MainNavHost() {
@@ -59,7 +63,12 @@ fun MainNavHost() {
 @Composable
 private fun MainNavBar(canNavigateUp: Boolean, onNavigateBack: () -> Unit) {
     TopAppBar(
-        title = { Text("E-matrica") }, // TODO
+        title = {
+            Text(
+                text = stringResource(R.string.app_title),
+                style = MaterialTheme.typography.titleSmall
+            )
+        },
         modifier = Modifier.clip(
             RoundedCornerShape(
                 topStart = 0.dp,
@@ -73,7 +82,8 @@ private fun MainNavBar(canNavigateUp: Boolean, onNavigateBack: () -> Unit) {
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = ""
+                        contentDescription = "",
+                        tint = MatricappNavy
                     )
                 }
             }
