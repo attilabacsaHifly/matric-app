@@ -1,4 +1,4 @@
-package com.appic.matricapp.ui.screens.initial
+package com.appic.matricapp.ui.screens.models
 
 import com.appic.matricapp.network.models.GetVehicleResponse
 

@@ -11,6 +11,8 @@ private val LightColorScheme = lightColorScheme(
     secondary = PurpleGrey40,
     tertiary = Pink40,
     surface = MatricappLime,
+    onSurfaceVariant = MatricappGrey,
+    outlineVariant = MatricappGrey,
     surfaceContainerHighest = Color.White
 )
 

@@ -7,7 +7,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
@@ -63,18 +64,13 @@ fun MainNavHost() {
 @Composable
 private fun MainNavBar(canNavigateUp: Boolean, onNavigateBack: () -> Unit) {
     TopAppBar(
-        title = {
-            Text(
-                text = stringResource(R.string.app_title),
-                style = MaterialTheme.typography.titleSmall
-            )
-        },
+        title = { Text(text = stringResource(R.string.app_title), style = typography.titleSmall) },
         modifier = Modifier.clip(
             RoundedCornerShape(
                 topStart = 0.dp,
                 topEnd = 0.dp,
-                bottomStart = 20.dp,
-                bottomEnd = 20.dp
+                bottomStart = dimensionResource(R.dimen.dp_20),
+                bottomEnd = dimensionResource(R.dimen.dp_20)
             )
         ),
         navigationIcon = {
