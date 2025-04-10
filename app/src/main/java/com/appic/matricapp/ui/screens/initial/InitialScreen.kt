@@ -43,8 +43,9 @@ fun InitialScreen(
         screenState = state,
         onCreated = { viewModel.loadScreen() },
         onVignetteSelected = { viewModel.selectedVignette = it },
-        onSelectCountyVignettes = onSelectCountyVignettes,
-        onPurchaseYearlyVignette = { viewModel.onPurchaseYearlyVignette() }
+        onPurchaseYearlyVignette = { viewModel.onPurchaseYearlyVignette() },
+        onPurchaseSuccess = onPurchaseSuccess,
+        onSelectCountyVignettes = onSelectCountyVignettes
     )
 }
 
@@ -53,8 +54,9 @@ private fun InitialScreenContent(
     screenState: InitialScreenState,
     onCreated: () -> Unit,
     onVignetteSelected: (Vignette) -> Unit,
-    onSelectCountyVignettes: () -> Unit,
-    onPurchaseYearlyVignette: () -> Unit
+    onPurchaseYearlyVignette: () -> Unit,
+    onPurchaseSuccess: () -> Unit,
+    onSelectCountyVignettes: () -> Unit
 ) {
     when (screenState) {
         InitialScreenState.Created -> {
@@ -77,6 +79,10 @@ private fun InitialScreenContent(
 
         InitialScreenState.Loading -> {
             InitialScreenLoadingContent()
+        }
+
+        InitialScreenState.Success -> {
+            onPurchaseSuccess()
         }
     }
 }
@@ -107,7 +113,7 @@ private fun InitialScreenLoadedContent(
         InitialScreenCountryVignettesCard(
             vignettes = info.vignettes,
             onVignetteSelected = { onVignetteSelected(it) },
-            onConfirmPurchase = onPurchaseYearlyVignette
+            onPurchaseYearlyVignette = onPurchaseYearlyVignette
         )
         InitialScreenYearlyCountyVignettesCard { onSelectCountyVignettes() }
     }
@@ -163,7 +169,8 @@ private fun InitialScreenContentPreview() {
             onCreated = {},
             onVignetteSelected = {},
             onSelectCountyVignettes = {},
-            onPurchaseYearlyVignette = { }
+            onPurchaseYearlyVignette = {},
+            onPurchaseSuccess = {}
         )
     }
 }

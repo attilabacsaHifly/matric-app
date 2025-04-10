@@ -46,7 +46,19 @@ class InitialScreenViewModel @Inject constructor(
     }
 
     fun onPurchaseYearlyVignette() {
-        // TODO
+        selectedVignette?.let {
+            viewModelScope.launch(Dispatchers.IO) {
+                initialScreenStateFlow.emit(InitialScreenState.Loading)
+
+                runCatching {
+                    if (interactor.orderVignettes(it)) {
+                        initialScreenStateFlow.emit(InitialScreenState.Success)
+                    } else {
+                        initialScreenStateFlow.emit(InitialScreenState.Error)
+                    }
+                }
+            }
+        }
     }
 
     private suspend fun handleResult(info: Info?, vehicleInfo: VehicleInfo?) {

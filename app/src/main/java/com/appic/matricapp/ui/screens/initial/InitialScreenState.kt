@@ -7,5 +7,6 @@ sealed interface InitialScreenState {
     data object Created : InitialScreenState
     data object Loading : InitialScreenState
     data class Loaded(val info: Info, val vehicleInfo: VehicleInfo) : InitialScreenState
+    data object Success : InitialScreenState
     data object Error : InitialScreenState
 }

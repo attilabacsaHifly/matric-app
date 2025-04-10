@@ -35,7 +35,7 @@ import com.appic.matricapp.ui.theme.MatricAppTheme
 fun InitialScreenCountryVignettesCard(
     vignettes: List<Vignette>,
     onVignetteSelected: (Vignette) -> Unit,
-    onConfirmPurchase: () -> Unit
+    onPurchaseYearlyVignette: () -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
 
@@ -93,7 +93,7 @@ fun InitialScreenCountryVignettesCard(
             }
 
             Button(
-                onClick = onConfirmPurchase,
+                onClick = onPurchaseYearlyVignette,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimensionResource(R.dimen.dp_8)),
@@ -101,10 +101,7 @@ fun InitialScreenCountryVignettesCard(
             ) {
                 Text(
                     text = stringResource(R.string.purchase),
-                    modifier = Modifier.padding(
-                        vertical = dimensionResource(R.dimen.dp_8),
-                        horizontal = dimensionResource(R.dimen.dp_16)
-                    ),
+                    modifier = Modifier.padding(vertical = dimensionResource(R.dimen.dp_8)),
                     color = Color.White,
                     style = typography.titleSmall
                 )
@@ -149,7 +146,7 @@ private fun InitialScreenCountryVignettesCardPreview() {
                 )
             ),
             onVignetteSelected = {},
-            onConfirmPurchase = {}
+            onPurchaseYearlyVignette = {}
         )
     }
 }

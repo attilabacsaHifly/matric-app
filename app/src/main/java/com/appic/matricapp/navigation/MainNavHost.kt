@@ -41,9 +41,18 @@ fun MainNavHost() {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val canNavigateUp =
-        navBackStackEntry?.destination?.hasRoute(NavigationDestination.Initial::class) == false
+        navBackStackEntry?.destination
+            ?.hasRoute(NavigationDestination.Initial::class) == false
+    val displayMainNavBar = navBackStackEntry?.destination
+        ?.hasRoute(NavigationDestination.PurchaseSuccess::class) == false
 
-    Scaffold(topBar = { MainNavBar(canNavigateUp) { navController.navigateUp() } }) { padding ->
+    Scaffold(
+        topBar = {
+            if (displayMainNavBar) {
+                MainNavBar(canNavigateUp) { navController.navigateUp() }
+            }
+        }
+    ) { padding ->
         NavHost(
             navController = navController,
             startDestination = NavigationDestination.Initial,
@@ -54,7 +63,9 @@ fun MainNavHost() {
                     navController.navigate(NavigationDestination.CountyVignettes)
                 },
                 onPurchaseSuccess = {
-                    navController.navigate(NavigationDestination.PurchaseSuccess)
+                    navController.navigate(NavigationDestination.PurchaseSuccess) {
+                        popUpTo(NavigationDestination.Initial) { inclusive = true }
+                    }
                 }
             )
 
@@ -62,7 +73,11 @@ fun MainNavHost() {
 
             addPurchaseConfirmationScreen()
 
-            addPurchaseSuccessScreen()
+            addPurchaseSuccessScreen {
+                navController.navigate(NavigationDestination.Initial) {
+                    popUpTo(NavigationDestination.PurchaseSuccess) { inclusive = true }
+                }
+            }
         }
     }
 }
@@ -120,8 +135,8 @@ private fun NavGraphBuilder.addPurchaseConfirmationScreen() {
     }
 }
 
-private fun NavGraphBuilder.addPurchaseSuccessScreen() {
+private fun NavGraphBuilder.addPurchaseSuccessScreen(onClose: () -> Unit) {
     composable<NavigationDestination.PurchaseSuccess> {
-        PurchaseSuccessScreen()
+        PurchaseSuccessScreen(onClose)
     }
 }
