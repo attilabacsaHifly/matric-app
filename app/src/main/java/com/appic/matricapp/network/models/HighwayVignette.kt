@@ -7,5 +7,5 @@ data class HighwayVignette(
     @SerializedName("sum") val sum: Double,
     @SerializedName("trxFee") val trxFee: Double,
     @SerializedName("vehicleCategory") val vehicleCategory: Category,
-    @SerializedName("vignetteType") val vignetteType: List<VignetteType>
+    @SerializedName("vignetteType") val vignetteTypes: List<VignetteType>
 )

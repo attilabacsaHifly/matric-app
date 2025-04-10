@@ -20,11 +20,11 @@ class InitialScreenViewModel @Inject constructor(
     private val interactor: HighwayVignetteInteractor
 ) : ViewModel() {
 
+    var selectedVignette: Vignette? = null
+
     private val initialScreenStateFlow =
         MutableStateFlow<InitialScreenState>(InitialScreenState.Created)
     val initialScreenState = initialScreenStateFlow.asStateFlow()
-
-    private var selectedVignette: Vignette? = null
 
     fun loadScreen() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -45,16 +45,12 @@ class InitialScreenViewModel @Inject constructor(
         }
     }
 
-    fun onVignetteSelected(vignette: Vignette) {
-        selectedVignette = vignette
-    }
-
     private suspend fun handleResult(info: Info?, vehicleInfo: VehicleInfo?) {
         if (info == null || vehicleInfo == null) {
             initialScreenStateFlow.emit(InitialScreenState.Error)
         } else {
             val filteredInfo = info.copy(vignettes = info.vignettes.filter { vignette ->
-                vignette.types.all { vignetteType ->
+                vignette.vignetteTypes.all { vignetteType ->
                     vignetteType == VignetteType.DAY ||
                             vignetteType == VignetteType.WEEK ||
                             vignetteType == VignetteType.MONTH

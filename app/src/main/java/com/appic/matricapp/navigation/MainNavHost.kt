@@ -20,16 +20,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.appic.matricapp.R
 import com.appic.matricapp.ui.screens.countyvignettes.CountyVignettesScreen
 import com.appic.matricapp.ui.screens.initial.InitialScreen
+import com.appic.matricapp.ui.screens.models.Vignette
 import com.appic.matricapp.ui.screens.purchaseconfirmation.PurchaseConfirmationScreen
 import com.appic.matricapp.ui.screens.purchasesuccess.PurchaseSuccessScreen
 import com.appic.matricapp.ui.theme.MatricappNavy
+import kotlin.reflect.typeOf
 
 @Composable
 fun MainNavHost() {
@@ -49,8 +53,13 @@ fun MainNavHost() {
                 onSelectCountyVignettes = {
                     navController.navigate(NavigationDestination.CountyVignettes)
                 },
-                onConfirmPurchase = {
-                    navController.navigate(NavigationDestination.PurchaseConfirmation)
+                onConfirmPurchase = { vehiclePlate, vignette ->
+                    navController.navigate(
+                        NavigationDestination.PurchaseConfirmation(
+                            vehiclePlate = vehiclePlate,
+                            vignettes = listOf(vignette)
+                        )
+                    )
                 })
 
             addCountyVignettesScreen()
@@ -64,7 +73,7 @@ fun MainNavHost() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MainNavBar(canNavigateUp: Boolean, onNavigateBack: () -> Unit) {
+private fun MainNavBar(canNavigateUp: Boolean, onNavigateUp: () -> Unit) {
     TopAppBar(
         title = { Text(text = stringResource(R.string.app_title), style = typography.titleSmall) },
         modifier = Modifier.clip(
@@ -77,7 +86,7 @@ private fun MainNavBar(canNavigateUp: Boolean, onNavigateBack: () -> Unit) {
         ),
         navigationIcon = {
             if (canNavigateUp) {
-                IconButton(onClick = onNavigateBack) {
+                IconButton(onClick = onNavigateUp) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "",
@@ -91,7 +100,7 @@ private fun MainNavBar(canNavigateUp: Boolean, onNavigateBack: () -> Unit) {
 
 private fun NavGraphBuilder.addInitialScreen(
     onSelectCountyVignettes: () -> Unit,
-    onConfirmPurchase: () -> Unit
+    onConfirmPurchase: (String, Vignette) -> Unit
 ) {
     composable<NavigationDestination.Initial> {
         InitialScreen(onSelectCountyVignettes, onConfirmPurchase)
@@ -105,8 +114,13 @@ private fun NavGraphBuilder.addCountyVignettesScreen() {
 }
 
 private fun NavGraphBuilder.addPurchaseConfirmationScreen() {
-    composable<NavigationDestination.PurchaseConfirmation> {
-        PurchaseConfirmationScreen()
+    val navTypeMap = mapOf(
+        typeOf<String>() to NavType.StringType,
+        typeOf<List<Vignette>>() to CustomNavType.vignettesType
+    )
+    composable<NavigationDestination.PurchaseConfirmation>(typeMap = navTypeMap) {
+        val route = it.toRoute<NavigationDestination.PurchaseConfirmation>()
+        PurchaseConfirmationScreen(route.vehiclePlate, route.vignettes)
     }
 }
 

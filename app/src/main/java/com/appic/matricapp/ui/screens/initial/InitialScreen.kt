@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.appic.matricapp.R
+import com.appic.matricapp.network.models.Category
 import com.appic.matricapp.network.models.VignetteCategory
 import com.appic.matricapp.network.models.VignetteType
 import com.appic.matricapp.ui.screens.initial.components.InitialScreenCountryVignettesCard
@@ -31,16 +32,26 @@ import com.appic.matricapp.ui.screens.models.Vignette
 import com.appic.matricapp.ui.theme.MatricAppTheme
 
 @Composable
-fun InitialScreen(onSelectCountyVignettes: () -> Unit, onConfirmPurchase: () -> Unit) {
+fun InitialScreen(
+    onSelectCountyVignettes: () -> Unit,
+    onConfirmPurchase: (String, Vignette) -> Unit
+) {
     val viewModel: InitialScreenViewModel = hiltViewModel()
     val state by viewModel.initialScreenState.collectAsState()
 
     InitialScreenContent(
         screenState = state,
         onCreated = { viewModel.loadScreen() },
-        onVignetteSelected = { viewModel.onVignetteSelected(it) },
+        onVignetteSelected = { viewModel.selectedVignette = it },
         onSelectCountyVignettes = onSelectCountyVignettes,
-        onConfirmPurchase = onConfirmPurchase
+        onConfirmPurchase = {
+            val loadedState = state as? InitialScreenState.Loaded
+            val selectedVignette = viewModel.selectedVignette
+
+            if (loadedState != null && selectedVignette != null) {
+                onConfirmPurchase(loadedState.vehicleInfo.vehiclePlate, selectedVignette)
+            }
+        }
     )
 }
 
@@ -129,20 +140,23 @@ private fun InitialScreenContentPreview() {
                 info = Info(
                     vignettes = listOf(
                         Vignette(
-                            category = VignetteCategory.D1,
-                            types = listOf(VignetteType.DAY),
+                            category = Category.CAR,
+                            vignetteCategory = VignetteCategory.D1,
+                            vignetteTypes = listOf(VignetteType.DAY),
                             cost = 4500.5,
                             trxFee = 160.7
                         ),
                         Vignette(
-                            category = VignetteCategory.D1,
-                            types = listOf(VignetteType.WEEK),
+                            category = Category.CAR,
+                            vignetteCategory = VignetteCategory.D1,
+                            vignetteTypes = listOf(VignetteType.WEEK),
                             cost = 6500.5,
                             trxFee = 160.7
                         ),
                         Vignette(
-                            category = VignetteCategory.D1,
-                            types = listOf(VignetteType.MONTH),
+                            category = Category.CAR,
+                            vignetteCategory = VignetteCategory.D1,
+                            vignetteTypes = listOf(VignetteType.MONTH),
                             cost = 11500.5,
                             trxFee = 160.7
                         )
@@ -156,6 +170,7 @@ private fun InitialScreenContentPreview() {
             onCreated = {},
             onVignetteSelected = {},
             onSelectCountyVignettes = {},
-            onConfirmPurchase = {})
+            onConfirmPurchase = { }
+        )
     }
 }

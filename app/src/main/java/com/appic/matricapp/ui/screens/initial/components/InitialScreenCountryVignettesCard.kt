@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.appic.matricapp.R
+import com.appic.matricapp.network.models.Category
 import com.appic.matricapp.network.models.VignetteCategory
 import com.appic.matricapp.network.models.VignetteType
 import com.appic.matricapp.ui.screens.models.Vignette
@@ -71,15 +72,15 @@ fun InitialScreenCountryVignettesCard(
                                 }
                             )
 
-                            val vignetteCategoryName = vignette.category.name
+                            val vignetteCategoryName = vignette.vignetteCategory.name
                             val vignetteTypeName = stringResource(
-                                vignette.types.first().toStringResource()
+                                vignette.vignetteTypes.first().toStringResource()
                             )
                             Text(
                                 text = "$vignetteCategoryName - $vignetteTypeName",
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
-                                style = typography.bodyMedium
+                                style = typography.bodyLarge
                             )
                         }
 
@@ -112,14 +113,6 @@ fun InitialScreenCountryVignettesCard(
     }
 }
 
-private fun VignetteType.toStringResource(): Int {
-    return when (this) {
-        VignetteType.DAY -> R.string.vignette_type_day
-        VignetteType.WEEK -> R.string.vignette_type_week
-        else -> R.string.vignette_type_month
-    }
-}
-
 @Composable
 @Preview
 private fun InitialScreenCountryVignettesCardPreview() {
@@ -127,26 +120,30 @@ private fun InitialScreenCountryVignettesCardPreview() {
         InitialScreenCountryVignettesCard(
             vignettes = listOf(
                 Vignette(
-                    category = VignetteCategory.D1,
-                    types = listOf(),
+                    category = Category.CAR,
+                    vignetteCategory = VignetteCategory.D1,
+                    vignetteTypes = listOf(),
                     cost = 5600.0,
                     trxFee = 110.0
                 ),
                 Vignette(
-                    category = VignetteCategory.D1,
-                    types = listOf(),
+                    category = Category.CAR,
+                    vignetteCategory = VignetteCategory.D1,
+                    vignetteTypes = listOf(),
                     cost = 4500.5,
                     trxFee = 110.0
                 ),
                 Vignette(
-                    category = VignetteCategory.D1,
-                    types = listOf(),
+                    category = Category.CAR,
+                    vignetteCategory = VignetteCategory.D1,
+                    vignetteTypes = listOf(),
                     cost = 8750.2,
                     trxFee = 110.0
                 ),
                 Vignette(
-                    category = VignetteCategory.D1,
-                    types = listOf(),
+                    category = Category.CAR,
+                    vignetteCategory = VignetteCategory.D1,
+                    vignetteTypes = listOf(),
                     cost = 2560.3,
                     trxFee = 110.0
                 )
@@ -154,5 +151,13 @@ private fun InitialScreenCountryVignettesCardPreview() {
             onVignetteSelected = {},
             onConfirmPurchase = {}
         )
+    }
+}
+
+private fun VignetteType.toStringResource(): Int {
+    return when (this) {
+        VignetteType.DAY -> R.string.vignette_type_day
+        VignetteType.WEEK -> R.string.vignette_type_week
+        else -> R.string.vignette_type_month
     }
 }

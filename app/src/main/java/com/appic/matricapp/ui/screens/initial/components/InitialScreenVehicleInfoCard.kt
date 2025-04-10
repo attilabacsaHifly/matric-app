@@ -40,7 +40,7 @@ fun InitialScreenVehicleInfoCard(vehicleInfo: VehicleInfo) {
             )
 
             Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.dp_4))) {
-                Text(text = vehicleInfo.vehiclePlate, style = typography.bodyMedium)
+                Text(text = vehicleInfo.vehiclePlate, style = typography.bodyLarge)
                 Text(text = vehicleInfo.vehicleOwnerName, style = typography.bodySmall)
             }
         }

@@ -25,16 +25,28 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         lineHeight = 28.sp
     ),
-    bodyMedium = TextStyle(
+    bodyLarge = TextStyle(
         color = MatricappNavy,
         fontSize = 16.sp,
         fontWeight = FontWeight.Medium,
         lineHeight = 24.sp
+    ),
+    bodyMedium = TextStyle(
+        color = MatricappNavy,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Normal,
+        lineHeight = 20.sp
     ),
     bodySmall = TextStyle(
         color = MatricappNavy,
         fontSize = 12.sp,
         fontWeight = FontWeight.Light,
         lineHeight = 16.sp
+    ),
+    labelMedium = TextStyle(
+        color = MatricappNavy,
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Medium,
+        lineHeight = 20.sp
     )
 )

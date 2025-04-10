@@ -1,5 +1,6 @@
 package com.appic.matricapp.navigation
 
+import com.appic.matricapp.ui.screens.models.Vignette
 import kotlinx.serialization.Serializable
 
 sealed interface NavigationDestination {
@@ -10,7 +11,10 @@ sealed interface NavigationDestination {
     data object CountyVignettes : NavigationDestination
 
     @Serializable
-    data object PurchaseConfirmation : NavigationDestination
+    data class PurchaseConfirmation(
+        val vehiclePlate: String,
+        val vignettes: List<Vignette>
+    ) : NavigationDestination
 
     @Serializable
     data object PurchaseSuccess : NavigationDestination
