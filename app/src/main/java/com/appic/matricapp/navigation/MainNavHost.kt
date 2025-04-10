@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,20 +36,21 @@ fun MainNavHost() {
     val navController = rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val canNavigateUp = navBackStackEntry?.destination?.route != NavigationDestination.INITIAL.route
+    val canNavigateUp =
+        navBackStackEntry?.destination?.hasRoute(NavigationDestination.Initial::class) == false
 
     Scaffold(topBar = { MainNavBar(canNavigateUp) { navController.navigateUp() } }) { padding ->
         NavHost(
             navController = navController,
-            startDestination = NavigationDestination.INITIAL.route,
+            startDestination = NavigationDestination.Initial,
             modifier = Modifier.padding(padding)
         ) {
             addInitialScreen(
                 onSelectCountyVignettes = {
-                    navController.navigate(NavigationDestination.COUNTY_VIGNETTES.route)
+                    navController.navigate(NavigationDestination.CountyVignettes)
                 },
                 onConfirmPurchase = {
-                    navController.navigate(NavigationDestination.PURCHASE_CONFIRMATION.route)
+                    navController.navigate(NavigationDestination.PurchaseConfirmation)
                 })
 
             addCountyVignettesScreen()
@@ -91,25 +93,25 @@ private fun NavGraphBuilder.addInitialScreen(
     onSelectCountyVignettes: () -> Unit,
     onConfirmPurchase: () -> Unit
 ) {
-    composable(NavigationDestination.INITIAL.route) {
+    composable<NavigationDestination.Initial> {
         InitialScreen(onSelectCountyVignettes, onConfirmPurchase)
     }
 }
 
 private fun NavGraphBuilder.addCountyVignettesScreen() {
-    composable(NavigationDestination.COUNTY_VIGNETTES.route) {
+    composable<NavigationDestination.CountyVignettes> {
         CountyVignettesScreen()
     }
 }
 
 private fun NavGraphBuilder.addPurchaseConfirmationScreen() {
-    composable(NavigationDestination.PURCHASE_CONFIRMATION.route) {
+    composable<NavigationDestination.PurchaseConfirmation> {
         PurchaseConfirmationScreen()
     }
 }
 
 private fun NavGraphBuilder.addPurchaseSuccessScreen() {
-    composable(NavigationDestination.PURCHASE_SUCCESS.route) {
+    composable<NavigationDestination.PurchaseSuccess> {
         PurchaseSuccessScreen()
     }
 }
