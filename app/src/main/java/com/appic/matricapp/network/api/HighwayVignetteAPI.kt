@@ -2,7 +2,7 @@ package com.appic.matricapp.network.api
 
 import com.appic.matricapp.network.models.GetInfoResponse
 import com.appic.matricapp.network.models.GetVehicleResponse
-import com.appic.matricapp.network.models.HighwayOrder
+import com.appic.matricapp.network.models.OrderVignettesRequest
 import com.appic.matricapp.network.models.OrderVignettesResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -18,7 +18,9 @@ interface HighwayVignetteAPI {
     suspend fun getVehicle(): Response<GetVehicleResponse>
 
     @POST(ENDPOINT_ORDER_VIGNETTES)
-    suspend fun orderVignettes(@Body orders: List<HighwayOrder>): Response<OrderVignettesResponse>
+    suspend fun orderVignettes(
+        @Body request: OrderVignettesRequest
+    ): Response<OrderVignettesResponse>
 
     companion object {
         private const val PATH = "v1/highway"

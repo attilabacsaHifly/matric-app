@@ -53,14 +53,10 @@ fun MainNavHost() {
                 onSelectCountyVignettes = {
                     navController.navigate(NavigationDestination.CountyVignettes)
                 },
-                onConfirmPurchase = { vehiclePlate, vignette ->
-                    navController.navigate(
-                        NavigationDestination.PurchaseConfirmation(
-                            vehiclePlate = vehiclePlate,
-                            vignettes = listOf(vignette)
-                        )
-                    )
-                })
+                onPurchaseSuccess = {
+                    navController.navigate(NavigationDestination.PurchaseSuccess)
+                }
+            )
 
             addCountyVignettesScreen()
 
@@ -100,10 +96,10 @@ private fun MainNavBar(canNavigateUp: Boolean, onNavigateUp: () -> Unit) {
 
 private fun NavGraphBuilder.addInitialScreen(
     onSelectCountyVignettes: () -> Unit,
-    onConfirmPurchase: (String, Vignette) -> Unit
+    onPurchaseSuccess: () -> Unit
 ) {
     composable<NavigationDestination.Initial> {
-        InitialScreen(onSelectCountyVignettes, onConfirmPurchase)
+        InitialScreen(onSelectCountyVignettes, onPurchaseSuccess)
     }
 }
 

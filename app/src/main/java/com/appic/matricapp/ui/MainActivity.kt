@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import com.appic.matricapp.navigation.MainNavHost
 import com.appic.matricapp.ui.theme.MatricAppTheme
+import com.appic.matricapp.ui.theme.MatricappLime
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +19,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(
-                scrim = Color.Transparent.toArgb(),
+                scrim = MatricappLime.toArgb(),
                 darkScrim = Color.Transparent.toArgb()
             )
         )

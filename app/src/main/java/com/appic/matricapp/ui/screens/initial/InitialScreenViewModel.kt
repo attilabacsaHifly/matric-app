@@ -45,6 +45,10 @@ class InitialScreenViewModel @Inject constructor(
         }
     }
 
+    fun onPurchaseYearlyVignette() {
+        // TODO
+    }
+
     private suspend fun handleResult(info: Info?, vehicleInfo: VehicleInfo?) {
         if (info == null || vehicleInfo == null) {
             initialScreenStateFlow.emit(InitialScreenState.Error)
