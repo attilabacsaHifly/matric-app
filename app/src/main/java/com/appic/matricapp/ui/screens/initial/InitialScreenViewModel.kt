@@ -24,6 +24,8 @@ class InitialScreenViewModel @Inject constructor(
         MutableStateFlow<InitialScreenState>(InitialScreenState.Created)
     val initialScreenState = initialScreenStateFlow.asStateFlow()
 
+    private var selectedVignette: Vignette? = null
+
     fun loadScreen() {
         viewModelScope.launch(Dispatchers.IO) {
             initialScreenStateFlow.emit(InitialScreenState.Loading)
@@ -44,7 +46,7 @@ class InitialScreenViewModel @Inject constructor(
     }
 
     fun onVignetteSelected(vignette: Vignette) {
-        // TODO
+        selectedVignette = vignette
     }
 
     private suspend fun handleResult(info: Info?, vehicleInfo: VehicleInfo?) {

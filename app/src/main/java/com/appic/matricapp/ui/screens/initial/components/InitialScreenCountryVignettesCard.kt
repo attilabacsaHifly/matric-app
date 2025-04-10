@@ -27,13 +27,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.appic.matricapp.R
 import com.appic.matricapp.network.models.VignetteCategory
 import com.appic.matricapp.network.models.VignetteType
-import com.appic.matricapp.ui.screens.models.Info
 import com.appic.matricapp.ui.screens.models.Vignette
 import com.appic.matricapp.ui.theme.MatricAppTheme
 
 @Composable
 fun InitialScreenCountryVignettesCard(
-    info: Info,
+    vignettes: List<Vignette>,
     onVignetteSelected: (Vignette) -> Unit,
     onConfirmPurchase: () -> Unit
 ) {
@@ -47,7 +46,7 @@ fun InitialScreenCountryVignettesCard(
                 style = typography.headlineSmall
             )
 
-            info.vignettes.forEachIndexed { index, vignette ->
+            vignettes.forEachIndexed { index, vignette ->
                 OutlinedCard(
                     onClick = {
                         selectedIndex = index
@@ -78,9 +77,9 @@ fun InitialScreenCountryVignettesCard(
                             )
                             Text(
                                 text = "$vignetteCategoryName - $vignetteTypeName",
-                                style = typography.bodyMedium,
                                 overflow = TextOverflow.Ellipsis,
-                                maxLines = 1
+                                maxLines = 1,
+                                style = typography.bodyMedium
                             )
                         }
 
@@ -126,33 +125,31 @@ private fun VignetteType.toStringResource(): Int {
 private fun InitialScreenCountryVignettesCardPreview() {
     MatricAppTheme {
         InitialScreenCountryVignettesCard(
-            info = Info(
-                vignettes = listOf(
-                    Vignette(
-                        category = VignetteCategory.D1,
-                        types = listOf(),
-                        cost = 5600.0,
-                        trxFee = 110.0
-                    ),
-                    Vignette(
-                        category = VignetteCategory.D1,
-                        types = listOf(),
-                        cost = 4500.5,
-                        trxFee = 110.0
-                    ),
-                    Vignette(
-                        category = VignetteCategory.D1,
-                        types = listOf(),
-                        cost = 8750.2,
-                        trxFee = 110.0
-                    ),
-                    Vignette(
-                        category = VignetteCategory.D1,
-                        types = listOf(),
-                        cost = 2560.3,
-                        trxFee = 110.0
-                    )
-                ), counties = listOf()
+            vignettes = listOf(
+                Vignette(
+                    category = VignetteCategory.D1,
+                    types = listOf(),
+                    cost = 5600.0,
+                    trxFee = 110.0
+                ),
+                Vignette(
+                    category = VignetteCategory.D1,
+                    types = listOf(),
+                    cost = 4500.5,
+                    trxFee = 110.0
+                ),
+                Vignette(
+                    category = VignetteCategory.D1,
+                    types = listOf(),
+                    cost = 8750.2,
+                    trxFee = 110.0
+                ),
+                Vignette(
+                    category = VignetteCategory.D1,
+                    types = listOf(),
+                    cost = 2560.3,
+                    trxFee = 110.0
+                )
             ),
             onVignetteSelected = {},
             onConfirmPurchase = {}

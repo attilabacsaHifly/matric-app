@@ -17,14 +17,18 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.appic.matricapp.R
+import com.appic.matricapp.network.models.VignetteCategory
+import com.appic.matricapp.network.models.VignetteType
 import com.appic.matricapp.ui.screens.initial.components.InitialScreenCountryVignettesCard
 import com.appic.matricapp.ui.screens.initial.components.InitialScreenVehicleInfoCard
 import com.appic.matricapp.ui.screens.initial.components.InitialScreenYearlyCountyVignettesCard
 import com.appic.matricapp.ui.screens.models.Info
 import com.appic.matricapp.ui.screens.models.VehicleInfo
 import com.appic.matricapp.ui.screens.models.Vignette
+import com.appic.matricapp.ui.theme.MatricAppTheme
 
 @Composable
 fun InitialScreen(onSelectCountyVignettes: () -> Unit, onConfirmPurchase: () -> Unit) {
@@ -33,8 +37,8 @@ fun InitialScreen(onSelectCountyVignettes: () -> Unit, onConfirmPurchase: () -> 
 
     InitialScreenContent(
         screenState = state,
-        loadScreen = { viewModel.loadScreen() },
-        { viewModel.onVignetteSelected(it) },
+        onCreated = { viewModel.loadScreen() },
+        onVignetteSelected = { viewModel.onVignetteSelected(it) },
         onSelectCountyVignettes = onSelectCountyVignettes,
         onConfirmPurchase = onConfirmPurchase
     )
@@ -43,14 +47,14 @@ fun InitialScreen(onSelectCountyVignettes: () -> Unit, onConfirmPurchase: () -> 
 @Composable
 private fun InitialScreenContent(
     screenState: InitialScreenState,
-    loadScreen: () -> Unit,
+    onCreated: () -> Unit,
     onVignetteSelected: (Vignette) -> Unit,
     onSelectCountyVignettes: () -> Unit,
     onConfirmPurchase: () -> Unit
 ) {
     when (screenState) {
         InitialScreenState.Created -> {
-            loadScreen()
+            onCreated()
         }
 
         InitialScreenState.Error -> {
@@ -96,7 +100,11 @@ private fun InitialScreenLoadedContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.dp_16))
     ) {
         InitialScreenVehicleInfoCard(vehicleInfo)
-        InitialScreenCountryVignettesCard(info, { onVignetteSelected(it) }, onConfirmPurchase)
+        InitialScreenCountryVignettesCard(
+            vignettes = info.vignettes,
+            onVignetteSelected = { onVignetteSelected(it) },
+            onConfirmPurchase = onConfirmPurchase
+        )
         InitialScreenYearlyCountyVignettesCard { onSelectCountyVignettes() }
     }
 }
@@ -109,5 +117,45 @@ private fun InitialScreenErrorContent() {
             modifier = Modifier.align(Center),
             style = typography.titleSmall
         )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun InitialScreenContentPreview() {
+    MatricAppTheme {
+        InitialScreenContent(
+            screenState = InitialScreenState.Loaded(
+                info = Info(
+                    vignettes = listOf(
+                        Vignette(
+                            category = VignetteCategory.D1,
+                            types = listOf(VignetteType.DAY),
+                            cost = 4500.5,
+                            trxFee = 160.7
+                        ),
+                        Vignette(
+                            category = VignetteCategory.D1,
+                            types = listOf(VignetteType.WEEK),
+                            cost = 6500.5,
+                            trxFee = 160.7
+                        ),
+                        Vignette(
+                            category = VignetteCategory.D1,
+                            types = listOf(VignetteType.MONTH),
+                            cost = 11500.5,
+                            trxFee = 160.7
+                        )
+                    ),
+                    counties = listOf()
+                ), vehicleInfo = VehicleInfo(
+                    vehicleOwnerName = "Teszt Elek",
+                    vehiclePlate = "ABC - 123"
+                )
+            ),
+            onCreated = {},
+            onVignetteSelected = {},
+            onSelectCountyVignettes = {},
+            onConfirmPurchase = {})
     }
 }
