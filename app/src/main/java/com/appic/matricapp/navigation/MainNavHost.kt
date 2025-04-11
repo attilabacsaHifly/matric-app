@@ -18,34 +18,27 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.appic.matricapp.R
 import com.appic.matricapp.ui.screens.countyvignettes.CountyVignettesScreen
 import com.appic.matricapp.ui.screens.initial.InitialScreen
-import com.appic.matricapp.ui.screens.models.Vignette
 import com.appic.matricapp.ui.screens.purchaseconfirmation.PurchaseConfirmationScreen
 import com.appic.matricapp.ui.screens.purchasesuccess.PurchaseSuccessScreen
 import com.appic.matricapp.ui.theme.MatricappNavy
-import kotlin.reflect.typeOf
 
 @Composable
 fun MainNavHost() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    val canNavigateUp = navBackStackEntry?.destination?.hasRoute(
-        NavigationDestination.Initial::class
-    ) == false
-    val displayMainNavBar = navBackStackEntry?.destination?.hasRoute(
-        NavigationDestination.PurchaseSuccess::class
-    ) == false
+    val canNavigateUp =
+        navBackStackEntry?.destination?.route != NavigationDestination.INITIAL.destination
+    val displayMainNavBar =
+        navBackStackEntry?.destination?.route != NavigationDestination.PURCHASE_SUCCESS.destination
 
     Scaffold(
         topBar = {
@@ -56,16 +49,16 @@ fun MainNavHost() {
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = NavigationDestination.Initial,
+            startDestination = NavigationDestination.INITIAL.destination,
             modifier = Modifier.padding(padding)
         ) {
             addInitialScreen(
                 onSelectCountyVignettes = {
-                    navController.navigate(NavigationDestination.CountyVignettes)
+                    navController.navigate(NavigationDestination.COUNTY_VIGNETTES)
                 },
                 onPurchaseSuccess = {
-                    navController.navigate(NavigationDestination.PurchaseSuccess) {
-                        popUpTo(NavigationDestination.Initial) { inclusive = true }
+                    navController.navigate(NavigationDestination.PURCHASE_SUCCESS) {
+                        popUpTo(NavigationDestination.INITIAL) { inclusive = true }
                     }
                 }
             )
@@ -75,8 +68,8 @@ fun MainNavHost() {
             addPurchaseConfirmationScreen()
 
             addPurchaseSuccessScreen {
-                navController.navigate(NavigationDestination.Initial) {
-                    popUpTo(NavigationDestination.PurchaseSuccess) { inclusive = true }
+                navController.navigate(NavigationDestination.INITIAL) {
+                    popUpTo(NavigationDestination.PURCHASE_SUCCESS) { inclusive = true }
                 }
             }
         }
@@ -114,30 +107,25 @@ private fun NavGraphBuilder.addInitialScreen(
     onSelectCountyVignettes: () -> Unit,
     onPurchaseSuccess: () -> Unit
 ) {
-    composable<NavigationDestination.Initial> {
+    composable(NavigationDestination.INITIAL.destination) {
         InitialScreen(onSelectCountyVignettes, onPurchaseSuccess)
     }
 }
 
 private fun NavGraphBuilder.addCountyVignettesScreen() {
-    composable<NavigationDestination.CountyVignettes> {
+    composable(NavigationDestination.COUNTY_VIGNETTES.destination) {
         CountyVignettesScreen()
     }
 }
 
 private fun NavGraphBuilder.addPurchaseConfirmationScreen() {
-    val navTypeMap = mapOf(
-        typeOf<String>() to NavType.StringType,
-        typeOf<List<Vignette>>() to CustomNavType.vignettesType
-    )
-    composable<NavigationDestination.PurchaseConfirmation>(typeMap = navTypeMap) {
-        val route = it.toRoute<NavigationDestination.PurchaseConfirmation>()
-        PurchaseConfirmationScreen(route.vehiclePlate, route.vignettes)
+    composable(NavigationDestination.PURCHASE_CONFIRMATION.destination) {
+        PurchaseConfirmationScreen()
     }
 }
 
 private fun NavGraphBuilder.addPurchaseSuccessScreen(onClose: () -> Unit) {
-    composable<NavigationDestination.PurchaseSuccess> {
+    composable(NavigationDestination.PURCHASE_SUCCESS.destination) {
         PurchaseSuccessScreen(onClose)
     }
 }

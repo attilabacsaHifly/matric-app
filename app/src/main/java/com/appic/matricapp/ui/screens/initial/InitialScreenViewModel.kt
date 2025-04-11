@@ -2,6 +2,7 @@ package com.appic.matricapp.ui.screens.initial
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.appic.matricapp.common.Cache
 import com.appic.matricapp.injection.IODispatcher
 import com.appic.matricapp.interactor.HighwayVignetteInteractor
 import com.appic.matricapp.network.models.VignetteType
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class InitialScreenViewModel @Inject constructor(
     @IODispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val interactor: HighwayVignetteInteractor
+    private val interactor: HighwayVignetteInteractor,
+    private val cache: Cache
 ) : ViewModel() {
 
     var selectedVignette: Vignette? = null
@@ -47,22 +49,6 @@ class InitialScreenViewModel @Inject constructor(
         }
     }
 
-    fun onPurchaseVignette() {
-        selectedVignette?.let {
-            viewModelScope.launch(ioDispatcher) {
-                initialScreenStateFlow.emit(InitialScreenState.Loading)
-
-                runCatching {
-                    if (interactor.orderVignettes(it)) {
-                        initialScreenStateFlow.emit(InitialScreenState.Success)
-                    } else {
-                        initialScreenStateFlow.emit(InitialScreenState.Error)
-                    }
-                }
-            }
-        }
-    }
-
     private suspend fun handleResult(info: Info?, vehicleInfo: VehicleInfo?) {
         if (info == null || vehicleInfo == null) {
             initialScreenStateFlow.emit(InitialScreenState.Error)
@@ -76,6 +62,9 @@ class InitialScreenViewModel @Inject constructor(
             })
 
             initialScreenStateFlow.emit(InitialScreenState.Loaded(filteredInfo, vehicleInfo))
+
+            cache.cacheInfo(info)
+            cache.cacheVehicleInfo(vehicleInfo)
         }
     }
 }

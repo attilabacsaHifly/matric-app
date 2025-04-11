@@ -34,7 +34,7 @@ import com.appic.matricapp.ui.theme.MatricAppTheme
 @Composable
 fun InitialScreen(
     onSelectCountyVignettes: () -> Unit,
-    onPurchaseSuccess: () -> Unit
+    onConfirmPurchase: () -> Unit
 ) {
     val viewModel: InitialScreenViewModel = hiltViewModel()
     val state by viewModel.initialScreenState.collectAsState()
@@ -43,8 +43,7 @@ fun InitialScreen(
         screenState = state,
         onCreated = { viewModel.loadScreen() },
         onVignetteSelected = { viewModel.selectedVignette = it },
-        onPurchaseVignette = { viewModel.onPurchaseVignette() },
-        onPurchaseSuccess = onPurchaseSuccess,
+        onConfirmPurchase = onConfirmPurchase,
         onSelectCountyVignettes = onSelectCountyVignettes
     )
 }
@@ -54,8 +53,7 @@ private fun InitialScreenContent(
     screenState: InitialScreenState,
     onCreated: () -> Unit,
     onVignetteSelected: (Vignette) -> Unit,
-    onPurchaseVignette: () -> Unit,
-    onPurchaseSuccess: () -> Unit,
+    onConfirmPurchase: () -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
     when (screenState) {
@@ -72,17 +70,13 @@ private fun InitialScreenContent(
                 info = screenState.info,
                 vehicleInfo = screenState.vehicleInfo,
                 onVignetteSelected = onVignetteSelected,
-                onPurchaseVignette = onPurchaseVignette,
+                onConfirmPurchase = onConfirmPurchase,
                 onSelectCountyVignettes = onSelectCountyVignettes
             )
         }
 
         InitialScreenState.Loading -> {
             InitialScreenLoadingContent()
-        }
-
-        InitialScreenState.Success -> {
-            onPurchaseSuccess()
         }
     }
 }
@@ -99,7 +93,7 @@ private fun InitialScreenLoadedContent(
     info: Info,
     vehicleInfo: VehicleInfo,
     onVignetteSelected: (Vignette) -> Unit,
-    onPurchaseVignette: () -> Unit,
+    onConfirmPurchase: () -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
     Column(
@@ -113,7 +107,7 @@ private fun InitialScreenLoadedContent(
         InitialScreenCountryVignettesCard(
             vignettes = info.vignettes,
             onVignetteSelected = { onVignetteSelected(it) },
-            onPurchaseVignette = onPurchaseVignette
+            onConfirmPurchase = onConfirmPurchase
         )
         InitialScreenYearlyCountyVignettesCard { onSelectCountyVignettes() }
     }
@@ -169,8 +163,7 @@ private fun InitialScreenContentPreview() {
             onCreated = {},
             onVignetteSelected = {},
             onSelectCountyVignettes = {},
-            onPurchaseVignette = {},
-            onPurchaseSuccess = {}
+            onConfirmPurchase = {}
         )
     }
 }

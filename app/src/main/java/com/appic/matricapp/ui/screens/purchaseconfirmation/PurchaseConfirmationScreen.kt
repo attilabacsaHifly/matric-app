@@ -1,6 +1,7 @@
 package com.appic.matricapp.ui.screens.purchaseconfirmation
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
@@ -15,16 +16,19 @@ import com.appic.matricapp.ui.screens.purchaseconfirmation.components.PurchaseCo
 import com.appic.matricapp.ui.screens.purchaseconfirmation.components.PurchaseConfirmationScreenVignettes
 
 @Composable
-fun PurchaseConfirmationScreen(vehiclePlate: String, vignettes: List<Vignette>) {
+fun PurchaseConfirmationScreen() {
     val viewModel: PurchaseConfirmationScreenViewModel = hiltViewModel()
-    viewModel.vignettes.addAll(vignettes)
 
-    PurchaseConfirmationScreenContent(vehiclePlate, vignettes)
+    PurchaseConfirmationScreenContent("ABC- 123", listOf()) // TODO
 }
 
 @Composable
 private fun PurchaseConfirmationScreenContent(vehiclePlate: String, vignettes: List<Vignette>) {
-    Column(modifier = Modifier.padding(dimensionResource(R.dimen.dp_20))) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(dimensionResource(R.dimen.dp_20))
+    ) {
         Text(
             text = stringResource(R.string.confirm_purchase),
             modifier = Modifier.padding(vertical = dimensionResource(R.dimen.dp_6)),
