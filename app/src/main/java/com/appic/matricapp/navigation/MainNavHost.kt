@@ -61,7 +61,9 @@ fun MainNavHost() {
                 }
             )
 
-            addCountyVignettesScreen()
+            addCountyVignettesScreen {
+                navController.navigate(NavigationDestination.PURCHASE_CONFIRMATION.destination)
+            }
 
             addPurchaseConfirmationScreen()
 
@@ -110,9 +112,9 @@ private fun NavGraphBuilder.addInitialScreen(
     }
 }
 
-private fun NavGraphBuilder.addCountyVignettesScreen() {
+private fun NavGraphBuilder.addCountyVignettesScreen(onConfirmPurchase: () -> Unit) {
     composable(NavigationDestination.COUNTY_VIGNETTES.destination) {
-        CountyVignettesScreen()
+        CountyVignettesScreen(onConfirmPurchase)
     }
 }
 

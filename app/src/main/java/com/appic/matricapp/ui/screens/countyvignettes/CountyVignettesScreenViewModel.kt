@@ -37,6 +37,10 @@ class CountyVignettesScreenViewModel @Inject constructor(private val cache: Cach
         isContinueEnabledFlow.tryEmit(selectedVignettes.any())
     }
 
+    fun onConfirmPurchase() {
+        cache.addVignettesToSelected(selectedVignettes)
+    }
+
     private fun initCountyNameVignettePairs(): List<Pair<String, Vignette>> {
         val cachedInfo = cache.getInfo() ?: return emptyList()
 

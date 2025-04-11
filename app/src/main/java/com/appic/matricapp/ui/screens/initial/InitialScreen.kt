@@ -43,7 +43,7 @@ fun InitialScreen(
         screenState = state,
         onCreated = { viewModel.loadScreen() },
         onConfirmPurchase = {
-            viewModel.onVignetteSelected(it)
+            viewModel.onConfirmPurchase(it)
             onConfirmPurchase()
         },
         onSelectCountyVignettes = { onSelectCountyVignettes() }

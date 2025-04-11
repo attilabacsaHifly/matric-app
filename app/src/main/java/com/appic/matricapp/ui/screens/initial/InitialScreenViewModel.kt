@@ -47,7 +47,7 @@ class InitialScreenViewModel @Inject constructor(
         }
     }
 
-    fun onVignetteSelected(vignette: Vignette) {
+    fun onConfirmPurchase(vignette: Vignette) {
         cache.addVignetteToSelected(vignette)
     }
 
