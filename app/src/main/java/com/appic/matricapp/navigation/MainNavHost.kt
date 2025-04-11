@@ -38,13 +38,14 @@ import kotlin.reflect.typeOf
 @Composable
 fun MainNavHost() {
     val navController = rememberNavController()
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val canNavigateUp =
-        navBackStackEntry?.destination
-            ?.hasRoute(NavigationDestination.Initial::class) == false
-    val displayMainNavBar = navBackStackEntry?.destination
-        ?.hasRoute(NavigationDestination.PurchaseSuccess::class) == false
+
+    val canNavigateUp = navBackStackEntry?.destination?.hasRoute(
+        NavigationDestination.Initial::class
+    ) == false
+    val displayMainNavBar = navBackStackEntry?.destination?.hasRoute(
+        NavigationDestination.PurchaseSuccess::class
+    ) == false
 
     Scaffold(
         topBar = {

@@ -26,7 +26,10 @@ fun InitialScreenYearlyCountyVignettesCard(onSelectCountyVignettes: () -> Unit) 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.dp_20)),
+                .padding(
+                    horizontal = dimensionResource(R.dimen.dp_16),
+                    vertical = dimensionResource(R.dimen.dp_20)
+                ),
             horizontalArrangement = SpaceBetween,
             verticalAlignment = CenterVertically
         ) {
@@ -34,7 +37,6 @@ fun InitialScreenYearlyCountyVignettesCard(onSelectCountyVignettes: () -> Unit) 
                 text = stringResource(R.string.yearly_county_vignettes),
                 style = typography.headlineMedium
             )
-
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = "",

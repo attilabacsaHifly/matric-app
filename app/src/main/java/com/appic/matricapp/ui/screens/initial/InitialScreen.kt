@@ -43,7 +43,7 @@ fun InitialScreen(
         screenState = state,
         onCreated = { viewModel.loadScreen() },
         onVignetteSelected = { viewModel.selectedVignette = it },
-        onPurchaseYearlyVignette = { viewModel.onPurchaseYearlyVignette() },
+        onPurchaseVignette = { viewModel.onPurchaseVignette() },
         onPurchaseSuccess = onPurchaseSuccess,
         onSelectCountyVignettes = onSelectCountyVignettes
     )
@@ -54,7 +54,7 @@ private fun InitialScreenContent(
     screenState: InitialScreenState,
     onCreated: () -> Unit,
     onVignetteSelected: (Vignette) -> Unit,
-    onPurchaseYearlyVignette: () -> Unit,
+    onPurchaseVignette: () -> Unit,
     onPurchaseSuccess: () -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
@@ -72,8 +72,8 @@ private fun InitialScreenContent(
                 info = screenState.info,
                 vehicleInfo = screenState.vehicleInfo,
                 onVignetteSelected = onVignetteSelected,
-                onSelectCountyVignettes = onSelectCountyVignettes,
-                onPurchaseYearlyVignette = onPurchaseYearlyVignette
+                onPurchaseVignette = onPurchaseVignette,
+                onSelectCountyVignettes = onSelectCountyVignettes
             )
         }
 
@@ -99,8 +99,8 @@ private fun InitialScreenLoadedContent(
     info: Info,
     vehicleInfo: VehicleInfo,
     onVignetteSelected: (Vignette) -> Unit,
-    onSelectCountyVignettes: () -> Unit,
-    onPurchaseYearlyVignette: () -> Unit
+    onPurchaseVignette: () -> Unit,
+    onSelectCountyVignettes: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -113,7 +113,7 @@ private fun InitialScreenLoadedContent(
         InitialScreenCountryVignettesCard(
             vignettes = info.vignettes,
             onVignetteSelected = { onVignetteSelected(it) },
-            onPurchaseYearlyVignette = onPurchaseYearlyVignette
+            onPurchaseVignette = onPurchaseVignette
         )
         InitialScreenYearlyCountyVignettesCard { onSelectCountyVignettes() }
     }
@@ -169,7 +169,7 @@ private fun InitialScreenContentPreview() {
             onCreated = {},
             onVignetteSelected = {},
             onSelectCountyVignettes = {},
-            onPurchaseYearlyVignette = {},
+            onPurchaseVignette = {},
             onPurchaseSuccess = {}
         )
     }

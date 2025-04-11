@@ -35,7 +35,7 @@ import com.appic.matricapp.ui.theme.MatricAppTheme
 fun InitialScreenCountryVignettesCard(
     vignettes: List<Vignette>,
     onVignetteSelected: (Vignette) -> Unit,
-    onPurchaseYearlyVignette: () -> Unit
+    onPurchaseVignette: () -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
 
@@ -93,7 +93,7 @@ fun InitialScreenCountryVignettesCard(
             }
 
             Button(
-                onClick = onPurchaseYearlyVignette,
+                onClick = onPurchaseVignette,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimensionResource(R.dimen.dp_8)),
@@ -119,34 +119,34 @@ private fun InitialScreenCountryVignettesCardPreview() {
                 Vignette(
                     category = Category.CAR,
                     vignetteCategory = VignetteCategory.D1,
-                    vignetteTypes = listOf(),
+                    vignetteTypes = listOf(VignetteType.DAY),
                     cost = 5600.0,
                     trxFee = 110.0
                 ),
                 Vignette(
                     category = Category.CAR,
                     vignetteCategory = VignetteCategory.D1,
-                    vignetteTypes = listOf(),
+                    vignetteTypes = listOf(VignetteType.WEEK),
                     cost = 4500.5,
                     trxFee = 110.0
                 ),
                 Vignette(
                     category = Category.CAR,
                     vignetteCategory = VignetteCategory.D1,
-                    vignetteTypes = listOf(),
+                    vignetteTypes = listOf(VignetteType.MONTH),
                     cost = 8750.2,
                     trxFee = 110.0
                 ),
                 Vignette(
                     category = Category.CAR,
                     vignetteCategory = VignetteCategory.D1,
-                    vignetteTypes = listOf(),
+                    vignetteTypes = listOf(VignetteType.WEEK),
                     cost = 2560.3,
                     trxFee = 110.0
                 )
             ),
             onVignetteSelected = {},
-            onPurchaseYearlyVignette = {}
+            onPurchaseVignette = {}
         )
     }
 }
