@@ -1,6 +1,7 @@
 package com.appic.matricapp.ui.screens.models
 
 import com.appic.matricapp.network.models.Category
+import com.appic.matricapp.network.models.County
 import com.appic.matricapp.network.models.GetInfoResponse
 import com.appic.matricapp.network.models.VignetteCategory
 
@@ -28,9 +29,7 @@ data class Info(val vignettes: List<Vignette>, val counties: List<County>) {
                             trxFee = highwayVignette.trxFee
                         )
                     },
-                    counties = response.payload.counties.map {
-                        County(it.name)
-                    }
+                    counties = response.payload.counties
                 )
             } else {
                 null

@@ -16,8 +16,10 @@
     <string name="trx_fee">Rendszerhasználati díj</string>
 
     <string name="vignettes_purchased_successfully">A matricákat sikeresen kifizetted!</string>
-    <string name="all_right">Rendben</string>
 
+    <string name="next">Tovább</string>
+    <string name="amount_to_pay">Fizetendő összeg</string>
+    <string name="all_right">Rendben</string>
     <string name="error">Hiba történt, próbáld meg később!</string>
     <string name="huf">%1$d Ft</string>
 </resources>

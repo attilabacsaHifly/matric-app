@@ -42,9 +42,11 @@ fun InitialScreen(
     InitialScreenContent(
         screenState = state,
         onCreated = { viewModel.loadScreen() },
-        onVignetteSelected = { viewModel.selectedVignette = it },
-        onConfirmPurchase = onConfirmPurchase,
-        onSelectCountyVignettes = onSelectCountyVignettes
+        onConfirmPurchase = {
+            viewModel.onVignetteSelected(it)
+            onConfirmPurchase()
+        },
+        onSelectCountyVignettes = { onSelectCountyVignettes() }
     )
 }
 
@@ -52,8 +54,7 @@ fun InitialScreen(
 private fun InitialScreenContent(
     screenState: InitialScreenState,
     onCreated: () -> Unit,
-    onVignetteSelected: (Vignette) -> Unit,
-    onConfirmPurchase: () -> Unit,
+    onConfirmPurchase: (Vignette) -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
     when (screenState) {
@@ -69,7 +70,6 @@ private fun InitialScreenContent(
             InitialScreenLoadedContent(
                 info = screenState.info,
                 vehicleInfo = screenState.vehicleInfo,
-                onVignetteSelected = onVignetteSelected,
                 onConfirmPurchase = onConfirmPurchase,
                 onSelectCountyVignettes = onSelectCountyVignettes
             )
@@ -92,8 +92,7 @@ private fun InitialScreenLoadingContent() {
 private fun InitialScreenLoadedContent(
     info: Info,
     vehicleInfo: VehicleInfo,
-    onVignetteSelected: (Vignette) -> Unit,
-    onConfirmPurchase: () -> Unit,
+    onConfirmPurchase: (Vignette) -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
     Column(
@@ -104,11 +103,7 @@ private fun InitialScreenLoadedContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.dp_16))
     ) {
         InitialScreenVehicleInfoCard(vehicleInfo)
-        InitialScreenCountryVignettesCard(
-            vignettes = info.vignettes,
-            onVignetteSelected = { onVignetteSelected(it) },
-            onConfirmPurchase = onConfirmPurchase
-        )
+        InitialScreenCountryVignettesCard(info.vignettes, onConfirmPurchase)
         InitialScreenYearlyCountyVignettesCard { onSelectCountyVignettes() }
     }
 }
@@ -161,7 +156,6 @@ private fun InitialScreenContentPreview() {
                 )
             ),
             onCreated = {},
-            onVignetteSelected = {},
             onSelectCountyVignettes = {},
             onConfirmPurchase = {}
         )

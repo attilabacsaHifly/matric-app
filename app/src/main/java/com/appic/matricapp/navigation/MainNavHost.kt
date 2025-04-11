@@ -54,12 +54,10 @@ fun MainNavHost() {
         ) {
             addInitialScreen(
                 onSelectCountyVignettes = {
-                    navController.navigate(NavigationDestination.COUNTY_VIGNETTES)
+                    navController.navigate(NavigationDestination.COUNTY_VIGNETTES.destination)
                 },
-                onPurchaseSuccess = {
-                    navController.navigate(NavigationDestination.PURCHASE_SUCCESS) {
-                        popUpTo(NavigationDestination.INITIAL) { inclusive = true }
-                    }
+                onConfirmPurchase = {
+                    navController.navigate(NavigationDestination.PURCHASE_CONFIRMATION.destination)
                 }
             )
 
@@ -68,8 +66,8 @@ fun MainNavHost() {
             addPurchaseConfirmationScreen()
 
             addPurchaseSuccessScreen {
-                navController.navigate(NavigationDestination.INITIAL) {
-                    popUpTo(NavigationDestination.PURCHASE_SUCCESS) { inclusive = true }
+                navController.navigate(NavigationDestination.INITIAL.destination) {
+                    popUpTo(NavigationDestination.PURCHASE_SUCCESS.destination) { inclusive = true }
                 }
             }
         }
@@ -105,10 +103,10 @@ private fun MainNavBar(canNavigateUp: Boolean, onNavigateUp: () -> Unit) {
 
 private fun NavGraphBuilder.addInitialScreen(
     onSelectCountyVignettes: () -> Unit,
-    onPurchaseSuccess: () -> Unit
+    onConfirmPurchase: () -> Unit
 ) {
     composable(NavigationDestination.INITIAL.destination) {
-        InitialScreen(onSelectCountyVignettes, onPurchaseSuccess)
+        InitialScreen(onSelectCountyVignettes, onConfirmPurchase)
     }
 }
 

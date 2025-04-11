@@ -24,8 +24,6 @@ class InitialScreenViewModel @Inject constructor(
     private val cache: Cache
 ) : ViewModel() {
 
-    var selectedVignette: Vignette? = null
-
     private val initialScreenStateFlow =
         MutableStateFlow<InitialScreenState>(InitialScreenState.Created)
     val initialScreenState = initialScreenStateFlow.asStateFlow()
@@ -45,11 +43,15 @@ class InitialScreenViewModel @Inject constructor(
                 }.getOrNull()
             }
 
-            handleResult(infoDeferred.await(), vehicleInfoDeferred.await())
+            onScreenLoaded(infoDeferred.await(), vehicleInfoDeferred.await())
         }
     }
 
-    private suspend fun handleResult(info: Info?, vehicleInfo: VehicleInfo?) {
+    fun onVignetteSelected(vignette: Vignette) {
+        cache.addVignetteToSelected(vignette)
+    }
+
+    private suspend fun onScreenLoaded(info: Info?, vehicleInfo: VehicleInfo?) {
         if (info == null || vehicleInfo == null) {
             initialScreenStateFlow.emit(InitialScreenState.Error)
         } else {

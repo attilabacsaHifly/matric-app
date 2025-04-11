@@ -34,8 +34,7 @@ import com.appic.matricapp.ui.theme.MatricAppTheme
 @Composable
 fun InitialScreenCountryVignettesCard(
     vignettes: List<Vignette>,
-    onVignetteSelected: (Vignette) -> Unit,
-    onConfirmPurchase: () -> Unit
+    onConfirmPurchase: (Vignette) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
 
@@ -49,10 +48,7 @@ fun InitialScreenCountryVignettesCard(
 
             vignettes.forEachIndexed { index, vignette ->
                 OutlinedCard(
-                    onClick = {
-                        selectedIndex = index
-                        onVignetteSelected(vignette)
-                    },
+                    onClick = { selectedIndex = index },
                     modifier = Modifier.padding(vertical = dimensionResource(R.dimen.dp_4)),
                     colors = cardColors(containerColor = Color.White)
                 ) {
@@ -66,10 +62,7 @@ fun InitialScreenCountryVignettesCard(
                         Row(modifier = Modifier.weight(1f), verticalAlignment = CenterVertically) {
                             RadioButton(
                                 selected = index == selectedIndex,
-                                onClick = {
-                                    selectedIndex = index
-                                    onVignetteSelected(vignette)
-                                }
+                                onClick = { selectedIndex = index }
                             )
 
                             val vignetteCategoryName = vignette.vignetteCategory.name
@@ -93,7 +86,11 @@ fun InitialScreenCountryVignettesCard(
             }
 
             Button(
-                onClick = onConfirmPurchase,
+                onClick = {
+                    selectedIndex?.let {
+                        onConfirmPurchase(vignettes[it])
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimensionResource(R.dimen.dp_8)),
@@ -145,7 +142,6 @@ private fun InitialScreenCountryVignettesCardPreview() {
                     trxFee = 110.0
                 )
             ),
-            onVignetteSelected = {},
             onConfirmPurchase = {}
         )
     }
