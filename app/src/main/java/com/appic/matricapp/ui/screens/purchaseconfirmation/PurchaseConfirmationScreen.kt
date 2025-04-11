@@ -35,7 +35,7 @@ private fun PurchaseConfirmationScreenContent(vehiclePlate: String, vignettes: L
             style = typography.headlineSmall
         )
 
-        PurchaseConfirmationScreenHeader(vehiclePlate)
+        PurchaseConfirmationScreenHeader(vehiclePlate, vignettes.first().vignetteTypes.first())
         PurchaseConfirmationScreenVignettes(vignettes)
     }
 }

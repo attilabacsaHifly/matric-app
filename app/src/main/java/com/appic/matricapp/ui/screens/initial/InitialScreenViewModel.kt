@@ -59,7 +59,8 @@ class InitialScreenViewModel @Inject constructor(
                 vignette.vignetteTypes.all { vignetteType ->
                     vignetteType == VignetteType.DAY ||
                             vignetteType == VignetteType.WEEK ||
-                            vignetteType == VignetteType.MONTH
+                            vignetteType == VignetteType.MONTH ||
+                            vignetteType == VignetteType.YEAR
                 }
             })
 

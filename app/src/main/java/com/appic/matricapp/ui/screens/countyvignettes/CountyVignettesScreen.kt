@@ -29,12 +29,12 @@ fun CountyVignettesScreen(onConfirmPurchase: () -> Unit) {
 
     val countyNameVignettePairs by viewModel.countyNameVignettePairs.collectAsState()
     val amountToPay by viewModel.amountToPay.collectAsState()
-    val isContinueEnabled by viewModel.isContinueEnabled.collectAsState()
+    val isConfirmPurchaseEnabled by viewModel.isConfirmPurchaseEnabled.collectAsState()
 
     CountyVignettesScreenContent(
         countyNameVignettePairs = countyNameVignettePairs,
         amountToPay = amountToPay,
-        isContinueEnabled = isContinueEnabled,
+        isConfirmPurchaseEnabled = isConfirmPurchaseEnabled,
         onVignetteSelected = { viewModel.onVignetteSelected(it) },
         onVignetteDeselected = { viewModel.onVignetteDeselected(it) },
         onConfirmPurchase = {
@@ -48,7 +48,7 @@ fun CountyVignettesScreen(onConfirmPurchase: () -> Unit) {
 private fun CountyVignettesScreenContent(
     countyNameVignettePairs: List<Pair<String, Vignette>>,
     amountToPay: Double,
-    isContinueEnabled: Boolean,
+    isConfirmPurchaseEnabled: Boolean,
     onVignetteSelected: (Vignette) -> Unit,
     onVignetteDeselected: (Vignette) -> Unit,
     onConfirmPurchase: () -> Unit
@@ -81,6 +81,6 @@ private fun CountyVignettesScreenContent(
             onVignetteSelected = onVignetteSelected,
             onVignetteDeselected = onVignetteDeselected
         )
-        CountyVignettesScreenFooter(amountToPay, isContinueEnabled, onConfirmPurchase)
+        CountyVignettesScreenFooter(amountToPay, isConfirmPurchaseEnabled, onConfirmPurchase)
     }
 }

@@ -137,7 +137,7 @@ private fun InitialScreenCountryVignettesCardPreview() {
                 Vignette(
                     category = Category.CAR,
                     vignetteCategory = VignetteCategory.D1,
-                    vignetteTypes = listOf(VignetteType.WEEK),
+                    vignetteTypes = listOf(VignetteType.YEAR),
                     cost = 2560.3,
                     trxFee = 110.0
                 )
@@ -151,6 +151,7 @@ private fun VignetteType.toStringResource(): Int {
     return when (this) {
         VignetteType.DAY -> R.string.vignette_type_day
         VignetteType.WEEK -> R.string.vignette_type_week
-        else -> R.string.vignette_type_month
+        VignetteType.MONTH -> R.string.vignette_type_month
+        else -> R.string.vignette_type_year
     }
 }

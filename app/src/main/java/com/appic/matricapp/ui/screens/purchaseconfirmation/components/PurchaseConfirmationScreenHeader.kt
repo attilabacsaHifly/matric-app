@@ -14,10 +14,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.appic.matricapp.R
+import com.appic.matricapp.network.models.VignetteType
 import com.appic.matricapp.ui.theme.MatricAppTheme
 
 @Composable
-fun PurchaseConfirmationScreenHeader(vehiclePlate: String) {
+fun PurchaseConfirmationScreenHeader(vehiclePlate: String, vignetteType: VignetteType) {
     HorizontalDivider()
 
     Row(
@@ -43,7 +44,7 @@ fun PurchaseConfirmationScreenHeader(vehiclePlate: String) {
         horizontalArrangement = SpaceBetween
     ) {
         Text(text = stringResource(R.string.vignette_type), style = typography.bodyMedium)
-        Text(text = "Éves vármegyei", style = typography.bodyMedium) // TODO
+        Text(text = stringResource(vignetteType.toStringResource()), style = typography.bodyMedium)
     }
 
     HorizontalDivider(modifier = Modifier.padding(bottom = dimensionResource(R.dimen.dp_24)))
@@ -54,7 +55,16 @@ fun PurchaseConfirmationScreenHeader(vehiclePlate: String) {
 private fun PurchaseConfirmationScreenHeaderPreview() {
     MatricAppTheme {
         Column {
-            PurchaseConfirmationScreenHeader("ABC - 123")
+            PurchaseConfirmationScreenHeader("ABC - 123", VignetteType.YEAR)
         }
+    }
+}
+
+private fun VignetteType.toStringResource(): Int {
+    return when (this) {
+        VignetteType.DAY -> R.string.vignette_type_day
+        VignetteType.WEEK -> R.string.vignette_type_week
+        VignetteType.MONTH -> R.string.vignette_type_month
+        else -> R.string.vignette_type_year_county
     }
 }

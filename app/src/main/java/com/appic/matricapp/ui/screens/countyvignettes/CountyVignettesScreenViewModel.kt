@@ -18,8 +18,8 @@ class CountyVignettesScreenViewModel @Inject constructor(private val cache: Cach
     private val amountToPayFlow = MutableStateFlow(0.0)
     val amountToPay = amountToPayFlow.asStateFlow()
 
-    private val isContinueEnabledFlow = MutableStateFlow(false)
-    val isContinueEnabled = isContinueEnabledFlow.asStateFlow()
+    private val isConfirmPurchaseEnabledFlow = MutableStateFlow(false)
+    val isConfirmPurchaseEnabled = isConfirmPurchaseEnabledFlow.asStateFlow()
 
     private val selectedVignettes = mutableListOf<Vignette>()
 
@@ -27,14 +27,14 @@ class CountyVignettesScreenViewModel @Inject constructor(private val cache: Cach
         selectedVignettes.add(vignette)
 
         amountToPayFlow.tryEmit(selectedVignettes.sumOf { it.cost })
-        isContinueEnabledFlow.tryEmit(selectedVignettes.any())
+        isConfirmPurchaseEnabledFlow.tryEmit(selectedVignettes.any())
     }
 
     fun onVignetteDeselected(vignette: Vignette) {
         selectedVignettes.remove(vignette)
 
         amountToPayFlow.tryEmit(selectedVignettes.sumOf { it.cost })
-        isContinueEnabledFlow.tryEmit(selectedVignettes.any())
+        isConfirmPurchaseEnabledFlow.tryEmit(selectedVignettes.any())
     }
 
     fun onConfirmPurchase() {
@@ -48,7 +48,8 @@ class CountyVignettesScreenViewModel @Inject constructor(private val cache: Cach
             vignette.vignetteTypes.none { vignetteType ->
                 vignetteType == VignetteType.DAY ||
                         vignetteType == VignetteType.WEEK ||
-                        vignetteType == VignetteType.MONTH
+                        vignetteType == VignetteType.MONTH ||
+                        vignetteType == VignetteType.YEAR
             }
         }
 

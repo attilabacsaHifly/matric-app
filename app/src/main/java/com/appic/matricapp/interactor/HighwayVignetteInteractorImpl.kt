@@ -38,7 +38,7 @@ class HighwayVignetteInteractorImpl(
         val orders = vignettes.map {
             HighwayOrder(
                 category = it.category.name,
-                cost = it.cost.toFloat(),
+                cost = (it.cost + it.trxFee).toFloat(),
                 type = it.vignetteTypes.first().name
             )
         }

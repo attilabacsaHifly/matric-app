@@ -18,7 +18,7 @@ import com.appic.matricapp.ui.theme.MatricAppTheme
 @Composable
 fun CountyVignettesScreenFooter(
     amountToPay: Double,
-    isContinueEnabled: Boolean,
+    isConfirmPurchaseEnabled: Boolean,
     onConfirmPurchase: () -> Unit
 ) {
     Text(text = stringResource(R.string.amount_to_pay), style = typography.bodyLarge)
@@ -32,7 +32,7 @@ fun CountyVignettesScreenFooter(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = dimensionResource(R.dimen.dp_24)),
-        enabled = isContinueEnabled
+        enabled = isConfirmPurchaseEnabled
     ) {
         Text(
             text = stringResource(R.string.next),
