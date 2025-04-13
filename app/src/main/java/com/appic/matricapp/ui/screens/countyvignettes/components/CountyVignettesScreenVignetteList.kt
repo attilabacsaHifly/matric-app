@@ -14,8 +14,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -32,10 +30,11 @@ import com.appic.matricapp.ui.theme.MatricAppTheme
 @Composable
 fun ColumnScope.CountyVignettesScreenVignetteList(
     countyNameVignettePairs: List<Pair<String, Vignette>>,
+    selectedNameVignettePairs: List<Pair<String, Vignette>>,
     onVignetteSelected: (Pair<String, Vignette>) -> Unit,
     onVignetteDeselected: (Pair<String, Vignette>) -> Unit
 ) {
-    val checkedStates = remember { countyNameVignettePairs.map { false }.toMutableStateList() }
+    val checked = countyNameVignettePairs.map { selectedNameVignettePairs.contains(it) }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,9 +45,7 @@ fun ColumnScope.CountyVignettesScreenVignetteList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        checkedStates[index] = !checkedStates[index]
-
-                        if (checkedStates[index]) {
+                        if (!checked[index]) {
                             onVignetteSelected(item)
                         } else {
                             onVignetteDeselected(item)
@@ -59,10 +56,8 @@ fun ColumnScope.CountyVignettesScreenVignetteList(
             ) {
                 Row(verticalAlignment = CenterVertically, modifier = Modifier.weight(1f)) {
                     Checkbox(
-                        checked = checkedStates[index],
+                        checked = checked[index],
                         onCheckedChange = { isChecked ->
-                            checkedStates[index] = isChecked
-
                             if (isChecked) {
                                 onVignetteSelected(item)
                             } else {
@@ -115,6 +110,7 @@ private fun CountyVignettesScreenVignetteListPreview() {
                         )
                     )
                 ),
+                selectedNameVignettePairs = listOf(),
                 onVignetteSelected = {},
                 onVignetteDeselected = {}
             )

@@ -26,27 +26,28 @@ import com.appic.matricapp.ui.screens.models.Vignette
 @Composable
 fun CountyVignettesScreen(onConfirmPurchase: () -> Unit) {
     val viewModel: CountyVignettesScreenViewModel = hiltViewModel()
+    val screenState by viewModel.screenState.collectAsState()
 
-    val countyNameVignettePairs by viewModel.displayedNameVignettePairs.collectAsState()
-    val amountToPay by viewModel.amountToPay.collectAsState()
-    val isConfirmPurchaseEnabled by viewModel.isConfirmPurchaseEnabled.collectAsState()
-
-    CountyVignettesScreenContent(
-        countyNameVignettePairs = countyNameVignettePairs,
-        amountToPay = amountToPay,
-        isConfirmPurchaseEnabled = isConfirmPurchaseEnabled,
-        onVignetteSelected = { viewModel.onVignetteSelected(it) },
-        onVignetteDeselected = { viewModel.onVignetteDeselected(it) },
-        onConfirmPurchase = {
-            viewModel.onConfirmPurchase()
-            onConfirmPurchase()
-        }
-    )
+    screenState?.let { state ->
+        CountyVignettesScreenContent(
+            countyNameVignettePairs = state.nameNameVignettePairs,
+            selectedNameVignettePairs = state.selectedNameVignettePairs,
+            amountToPay = state.amountToPay,
+            isConfirmPurchaseEnabled = state.isConfirmPurchaseEnabled,
+            onVignetteSelected = { viewModel.onVignetteSelected(it) },
+            onVignetteDeselected = { viewModel.onVignetteDeselected(it) },
+            onConfirmPurchase = {
+                viewModel.onConfirmPurchase()
+                onConfirmPurchase()
+            }
+        )
+    }
 }
 
 @Composable
 private fun CountyVignettesScreenContent(
     countyNameVignettePairs: List<Pair<String, Vignette>>,
+    selectedNameVignettePairs: List<Pair<String, Vignette>>,
     amountToPay: Double,
     isConfirmPurchaseEnabled: Boolean,
     onVignetteSelected: (Pair<String, Vignette>) -> Unit,
@@ -78,6 +79,7 @@ private fun CountyVignettesScreenContent(
 
         CountyVignettesScreenVignetteList(
             countyNameVignettePairs = countyNameVignettePairs,
+            selectedNameVignettePairs = selectedNameVignettePairs,
             onVignetteSelected = onVignetteSelected,
             onVignetteDeselected = onVignetteDeselected
         )

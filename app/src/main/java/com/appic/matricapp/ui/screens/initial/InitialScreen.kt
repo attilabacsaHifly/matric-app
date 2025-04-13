@@ -36,10 +36,10 @@ fun InitialScreen(
     onConfirmPurchase: () -> Unit
 ) {
     val viewModel: InitialScreenViewModel = hiltViewModel()
-    val state by viewModel.screenState.collectAsState()
+    val screenState by viewModel.screenState.collectAsState()
 
     InitialScreenContent(
-        screenState = state,
+        screenState = screenState,
         onCreated = { viewModel.onCreated() },
         onNameVignettePairSelected = { viewModel.onNameVignettePairSelected(it) },
         onConfirmPurchase = {

@@ -14,38 +14,45 @@ class CountyVignettesScreenViewModel @Inject constructor(
     private val dataCache: DataCache
 ) : ViewModel() {
 
-    private val displayedNameNameVignettePairsFlow =
-        MutableStateFlow(initDisplayedNameNameVignettePairs())
-    val displayedNameVignettePairs = displayedNameNameVignettePairsFlow.asStateFlow()
-
-    private val amountToPayFlow = MutableStateFlow(0.0)
-    val amountToPay = amountToPayFlow.asStateFlow()
-
-    private val isConfirmPurchaseEnabledFlow = MutableStateFlow(false)
-    val isConfirmPurchaseEnabled = isConfirmPurchaseEnabledFlow.asStateFlow()
-
-    private val selectedNameVignettePairs = mutableListOf<Pair<String, Vignette>>()
+    private val screenStateFlow = MutableStateFlow(initScreenState())
+    val screenState = screenStateFlow.asStateFlow()
 
     fun onVignetteSelected(nameVignettePair: Pair<String, Vignette>) {
-        selectedNameVignettePairs.add(nameVignettePair)
+        screenStateFlow.value?.let { screenState ->
+            val updatedSelectedNameVignettePairs =
+                screenState.selectedNameVignettePairs.plus(nameVignettePair)
+            val updatedScreenState = screenState.copy(
+                selectedNameVignettePairs = updatedSelectedNameVignettePairs,
+                amountToPay = updatedSelectedNameVignettePairs.sumOf { it.second.cost },
+                isConfirmPurchaseEnabled = true
+            )
 
-        amountToPayFlow.tryEmit(selectedNameVignettePairs.sumOf { it.second.cost })
-        isConfirmPurchaseEnabledFlow.tryEmit(selectedNameVignettePairs.any())
+            screenStateFlow.tryEmit(updatedScreenState)
+        }
     }
 
     fun onVignetteDeselected(nameVignettePair: Pair<String, Vignette>) {
-        selectedNameVignettePairs.remove(nameVignettePair)
+        screenStateFlow.value?.let { screenState ->
+            val updatedSelectedNameVignettePairs =
+                screenState.selectedNameVignettePairs.minus(nameVignettePair)
+            val updatedScreenState = screenState.copy(
+                selectedNameVignettePairs = updatedSelectedNameVignettePairs,
+                amountToPay = updatedSelectedNameVignettePairs.sumOf { it.second.cost },
+                isConfirmPurchaseEnabled = updatedSelectedNameVignettePairs.any()
+            )
 
-        amountToPayFlow.tryEmit(selectedNameVignettePairs.sumOf { it.second.cost })
-        isConfirmPurchaseEnabledFlow.tryEmit(selectedNameVignettePairs.any())
+            screenStateFlow.tryEmit(updatedScreenState)
+        }
     }
 
     fun onConfirmPurchase() {
-        dataCache.addNameVignettePairsToSelected(selectedNameVignettePairs)
+        screenStateFlow.value?.let {
+            dataCache.addNameVignettePairsToSelected(it.selectedNameVignettePairs)
+        }
     }
 
-    private fun initDisplayedNameNameVignettePairs(): List<Pair<String, Vignette>> {
-        val cachedInfo = dataCache.getInfo() ?: return emptyList()
+    private fun initScreenState(): CountyVignettesScreenState? {
+        val cachedInfo = dataCache.getInfo() ?: return null
 
         val yearlyVignettes = cachedInfo.vignettes.filter { vignette ->
             vignette.vignetteTypes.none { vignetteType ->
@@ -56,7 +63,7 @@ class CountyVignettesScreenViewModel @Inject constructor(
             }
         }
 
-        return cachedInfo.counties.mapNotNull { county ->
+        val nameNameVignettePairs = cachedInfo.counties.mapNotNull { county ->
             val matchingVignette = yearlyVignettes.firstOrNull { vignette ->
                 vignette.vignetteTypes.any { vignetteType ->
                     vignetteType.name == county.id
@@ -65,5 +72,12 @@ class CountyVignettesScreenViewModel @Inject constructor(
 
             Pair(county.name, matchingVignette ?: return@mapNotNull null)
         }.sortedBy { pair -> pair.first }
+
+        return CountyVignettesScreenState(
+            nameNameVignettePairs = nameNameVignettePairs,
+            amountToPay = 0.0,
+            isConfirmPurchaseEnabled = false,
+            selectedNameVignettePairs = mutableListOf()
+        )
     }
 }
