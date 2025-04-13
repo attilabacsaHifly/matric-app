@@ -7,8 +7,9 @@ sealed interface InitialScreenState {
     data object Created : InitialScreenState
     data object Loading : InitialScreenState
     data class Loaded(
-        val displayedNameVignettePairs: List<Pair<Int, Vignette>>,
-        val vehicleInfo: VehicleInfo
+        val nameVignettePairs: List<Pair<Int, Vignette>>,
+        val vehicleInfo: VehicleInfo,
+        var selectedNameVignettePair: Pair<String, Vignette>?
     ) : InitialScreenState
 
     data object Error : InitialScreenState

@@ -65,6 +65,7 @@ private fun VignetteType.toStringResource(): Int {
         VignetteType.DAY -> R.string.vignette_type_day
         VignetteType.WEEK -> R.string.vignette_type_week
         VignetteType.MONTH -> R.string.vignette_type_month
+        VignetteType.YEAR -> R.string.vignette_type_year
         else -> R.string.vignette_type_year_county
     }
 }

@@ -13,10 +13,6 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,11 +29,11 @@ import com.appic.matricapp.ui.theme.MatricAppTheme
 
 @Composable
 fun InitialScreenCountryVignettesCard(
-    displayedNameVignettePairs: List<Pair<Int, Vignette>>,
-    onConfirmPurchase: (Pair<String, Vignette>) -> Unit
+    nameVignettePairs: List<Pair<Int, Vignette>>,
+    selectedNameVignettePair: Pair<String, Vignette>?,
+    onNameVignettePairSelected: (Pair<String, Vignette>) -> Unit,
+    onConfirmPurchase: () -> Unit
 ) {
-    var selectedIndex by remember { mutableStateOf<Int?>(null) }
-
     Card {
         Column(modifier = Modifier.padding(dimensionResource(R.dimen.dp_16))) {
             Text(
@@ -46,9 +42,12 @@ fun InitialScreenCountryVignettesCard(
                 style = typography.headlineSmall
             )
 
-            displayedNameVignettePairs.forEachIndexed { index, nameVignettePair ->
+            val displayedNameVignettePairs = nameVignettePairs.map {
+                Pair("${it.second.vignetteCategory.name} - ${stringResource(it.first)}", it.second)
+            }
+            displayedNameVignettePairs.forEachIndexed { index, displayedNameVignettePair ->
                 OutlinedCard(
-                    onClick = { selectedIndex = index },
+                    onClick = { onNameVignettePairSelected(displayedNameVignettePair) },
                     modifier = Modifier.padding(vertical = dimensionResource(R.dimen.dp_4)),
                     colors = cardColors(containerColor = Color.White)
                 ) {
@@ -61,16 +60,13 @@ fun InitialScreenCountryVignettesCard(
                     ) {
                         Row(modifier = Modifier.weight(1f), verticalAlignment = CenterVertically) {
                             RadioButton(
-                                selected = index == selectedIndex,
-                                onClick = { selectedIndex = index }
+                                selected = index == displayedNameVignettePairs.indexOf(
+                                    selectedNameVignettePair
+                                ),
+                                onClick = { onNameVignettePairSelected(displayedNameVignettePair) }
                             )
-
-                            val displayedName =
-                                "${displayedNameVignettePairs[index].second.vignetteCategory.name} - " +
-                                        stringResource(displayedNameVignettePairs[index].first)
-
                             Text(
-                                text = displayedName,
+                                text = displayedNameVignettePair.first,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
                                 style = typography.bodyLarge
@@ -80,7 +76,7 @@ fun InitialScreenCountryVignettesCard(
                         Text(
                             text = stringResource(
                                 R.string.huf,
-                                nameVignettePair.second.cost.toInt()
+                                displayedNameVignettePair.second.cost.toInt()
                             ),
                             style = typography.titleSmall
                         )
@@ -88,22 +84,12 @@ fun InitialScreenCountryVignettesCard(
                 }
             }
 
-            val displayedName = selectedIndex?.let {
-                "${displayedNameVignettePairs[it].second.vignetteCategory.name} - " +
-                        stringResource(displayedNameVignettePairs[it].first)
-            } ?: ""
             Button(
-                onClick = {
-                    selectedIndex?.let {
-                        onConfirmPurchase(
-                            Pair(displayedName, displayedNameVignettePairs[it].second)
-                        )
-                    }
-                },
+                onClick = onConfirmPurchase,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = dimensionResource(R.dimen.dp_8)),
-                enabled = selectedIndex != null
+                enabled = selectedNameVignettePair != null
             ) {
                 Text(
                     text = stringResource(R.string.purchase),
@@ -121,7 +107,7 @@ fun InitialScreenCountryVignettesCard(
 private fun InitialScreenCountryVignettesCardPreview() {
     MatricAppTheme {
         InitialScreenCountryVignettesCard(
-            displayedNameVignettePairs = listOf(
+            nameVignettePairs = listOf(
                 Pair(
                     R.string.vignette_type_day,
                     Vignette(
@@ -163,6 +149,8 @@ private fun InitialScreenCountryVignettesCardPreview() {
                     )
                 )
             ),
+            selectedNameVignettePair = null,
+            onNameVignettePairSelected = {},
             onConfirmPurchase = {}
         )
     }

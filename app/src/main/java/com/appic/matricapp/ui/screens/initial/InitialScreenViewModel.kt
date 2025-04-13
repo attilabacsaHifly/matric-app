@@ -28,7 +28,7 @@ class InitialScreenViewModel @Inject constructor(
     private val screenStateFlow = MutableStateFlow<InitialScreenState>(InitialScreenState.Created)
     val screenState = screenStateFlow.asStateFlow()
 
-    fun loadScreen() {
+    fun onCreated() {
         viewModelScope.launch(ioDispatcher) {
             screenStateFlow.emit(InitialScreenState.Loading)
 
@@ -47,8 +47,26 @@ class InitialScreenViewModel @Inject constructor(
         }
     }
 
-    fun onConfirmPurchase(nameVignettePairs: Pair<String, Vignette>) {
-        dataCache.addNameVignettePairToSelected(nameVignettePairs)
+    fun onNameVignettePairSelected(nameVignettePair: Pair<String, Vignette>) {
+        (screenStateFlow.value as? InitialScreenState.Loaded)?.let {
+            val updatedValue = it.copy(selectedNameVignettePair = nameVignettePair)
+            screenStateFlow.tryEmit(updatedValue)
+        }
+    }
+
+    fun onConfirmPurchase() {
+        (screenStateFlow.value as? InitialScreenState.Loaded)?.selectedNameVignettePair?.let {
+            dataCache.addNameVignettePairToSelected(it)
+        }
+    }
+
+    fun clearSelection() {
+        val loadedState = screenStateFlow.value as? InitialScreenState.Loaded
+
+        loadedState?.selectedNameVignettePair?.let {
+            dataCache.removeNameVignettePairFromSelected(it)
+        }
+        loadedState?.selectedNameVignettePair = null
     }
 
     private suspend fun onScreenLoaded(info: Info?, vehicleInfo: VehicleInfo?) {
@@ -68,7 +86,7 @@ class InitialScreenViewModel @Inject constructor(
                 Pair(it.vignetteTypes.first().toStringResource(), it)
             }
             screenStateFlow.emit(
-                InitialScreenState.Loaded(displayedNameVignettePairs, vehicleInfo)
+                InitialScreenState.Loaded(displayedNameVignettePairs, vehicleInfo, null)
             )
 
             dataCache.cacheInfo(info)

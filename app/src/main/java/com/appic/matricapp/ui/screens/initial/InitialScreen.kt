@@ -40,12 +40,16 @@ fun InitialScreen(
 
     InitialScreenContent(
         screenState = state,
-        onCreated = { viewModel.loadScreen() },
+        onCreated = { viewModel.onCreated() },
+        onNameVignettePairSelected = { viewModel.onNameVignettePairSelected(it) },
         onConfirmPurchase = {
-            viewModel.onConfirmPurchase(it)
+            viewModel.onConfirmPurchase()
             onConfirmPurchase()
         },
-        onSelectCountyVignettes = { onSelectCountyVignettes() }
+        onSelectCountyVignettes = {
+            onSelectCountyVignettes()
+            viewModel.clearSelection()
+        }
     )
 }
 
@@ -53,7 +57,8 @@ fun InitialScreen(
 private fun InitialScreenContent(
     screenState: InitialScreenState,
     onCreated: () -> Unit,
-    onConfirmPurchase: (Pair<String, Vignette>) -> Unit,
+    onNameVignettePairSelected: (Pair<String, Vignette>) -> Unit,
+    onConfirmPurchase: () -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
     when (screenState) {
@@ -67,8 +72,10 @@ private fun InitialScreenContent(
 
         is InitialScreenState.Loaded -> {
             InitialScreenLoadedContent(
-                displayedNameVignettePairs = screenState.displayedNameVignettePairs,
                 vehicleInfo = screenState.vehicleInfo,
+                nameVignettePairs = screenState.nameVignettePairs,
+                selectedNameVignettePair = screenState.selectedNameVignettePair,
+                onNameVignettePairSelected = onNameVignettePairSelected,
                 onConfirmPurchase = onConfirmPurchase,
                 onSelectCountyVignettes = onSelectCountyVignettes
             )
@@ -89,9 +96,11 @@ private fun InitialScreenLoadingContent() {
 
 @Composable
 private fun InitialScreenLoadedContent(
-    displayedNameVignettePairs: List<Pair<Int, Vignette>>,
     vehicleInfo: VehicleInfo,
-    onConfirmPurchase: (Pair<String, Vignette>) -> Unit,
+    nameVignettePairs: List<Pair<Int, Vignette>>,
+    selectedNameVignettePair: Pair<String, Vignette>?,
+    onNameVignettePairSelected: (Pair<String, Vignette>) -> Unit,
+    onConfirmPurchase: () -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
     Column(
@@ -102,7 +111,12 @@ private fun InitialScreenLoadedContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.dp_16))
     ) {
         InitialScreenVehicleInfoCard(vehicleInfo)
-        InitialScreenCountryVignettesCard(displayedNameVignettePairs, onConfirmPurchase)
+        InitialScreenCountryVignettesCard(
+            nameVignettePairs = nameVignettePairs,
+            selectedNameVignettePair = selectedNameVignettePair,
+            onNameVignettePairSelected = onNameVignettePairSelected,
+            onConfirmPurchase = onConfirmPurchase
+        )
         InitialScreenYearlyCountyVignettesCard { onSelectCountyVignettes() }
     }
 }
@@ -124,7 +138,7 @@ private fun InitialScreenContentPreview() {
     MatricAppTheme {
         InitialScreenContent(
             screenState = InitialScreenState.Loaded(
-                displayedNameVignettePairs = listOf(
+                nameVignettePairs = listOf(
                     Pair(
                         R.string.vignette_type_day,
                         Vignette(
@@ -169,9 +183,11 @@ private fun InitialScreenContentPreview() {
                 vehicleInfo = VehicleInfo(
                     vehicleOwnerName = "Teszt Elek",
                     vehiclePlate = "ABC - 123"
-                )
+                ),
+                selectedNameVignettePair = null
             ),
             onCreated = {},
+            onNameVignettePairSelected = {},
             onSelectCountyVignettes = {},
             onConfirmPurchase = {}
         )
