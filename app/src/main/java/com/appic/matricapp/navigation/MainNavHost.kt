@@ -65,7 +65,18 @@ fun MainNavHost() {
                 navController.navigate(NavigationDestination.PURCHASE_CONFIRMATION.destination)
             }
 
-            addPurchaseConfirmationScreen { navController.navigateUp() }
+            addPurchaseConfirmationScreen(
+                onSuccessfulPurchase = {
+                    navController.navigate(NavigationDestination.PURCHASE_SUCCESS.destination) {
+                        popUpTo(NavigationDestination.INITIAL.destination) {
+                            inclusive = true
+                        }
+                    }
+                },
+                onCancelPurchase = {
+                    navController.navigateUp()
+                }
+            )
 
             addPurchaseSuccessScreen {
                 navController.navigate(NavigationDestination.INITIAL.destination) {
@@ -118,9 +129,12 @@ private fun NavGraphBuilder.addCountyVignettesScreen(onConfirmPurchase: () -> Un
     }
 }
 
-private fun NavGraphBuilder.addPurchaseConfirmationScreen(onCancelPurchase: () -> Unit) {
+private fun NavGraphBuilder.addPurchaseConfirmationScreen(
+    onSuccessfulPurchase: () -> Unit,
+    onCancelPurchase: () -> Unit
+) {
     composable(NavigationDestination.PURCHASE_CONFIRMATION.destination) {
-        PurchaseConfirmationScreen(onCancelPurchase)
+        PurchaseConfirmationScreen(onSuccessfulPurchase, onCancelPurchase)
     }
 }
 

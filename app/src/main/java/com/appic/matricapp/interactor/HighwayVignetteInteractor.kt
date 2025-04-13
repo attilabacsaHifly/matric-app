@@ -7,5 +7,5 @@ import com.appic.matricapp.ui.screens.models.Vignette
 interface HighwayVignetteInteractor {
     suspend fun getInfo(): Info?
     suspend fun getVehicleInfo(): VehicleInfo?
-    suspend fun orderVignettes(vararg vignettes: Vignette): Boolean
+    suspend fun orderVignettes(vignettes: List<Vignette>): Boolean
 }

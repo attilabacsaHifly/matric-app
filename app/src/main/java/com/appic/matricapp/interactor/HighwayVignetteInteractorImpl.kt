@@ -34,7 +34,7 @@ class HighwayVignetteInteractorImpl(
         }
     }
 
-    override suspend fun orderVignettes(vararg vignettes: Vignette): Boolean {
+    override suspend fun orderVignettes(vignettes: List<Vignette>): Boolean {
         val orders = vignettes.map {
             HighwayOrder(
                 category = it.category.name,

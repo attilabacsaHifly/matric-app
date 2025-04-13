@@ -1,15 +1,18 @@
 package com.appic.matricapp.ui.screens.purchaseconfirmation
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -21,17 +24,23 @@ import com.appic.matricapp.ui.screens.purchaseconfirmation.components.PurchaseCo
 import com.appic.matricapp.ui.screens.purchaseconfirmation.components.PurchaseConfirmationScreenVignettes
 
 @Composable
-fun PurchaseConfirmationScreen(onCancelPurchase: () -> Unit) {
+fun PurchaseConfirmationScreen(onSuccessfulPurchase: () -> Unit, onCancelPurchase: () -> Unit) {
     val viewModel: PurchaseConfirmationScreenViewModel = hiltViewModel()
     val screenState by viewModel.screenState.collectAsState()
 
-    PurchaseConfirmationScreenContent(screenState, {}, onCancelPurchase)
+    PurchaseConfirmationScreenContent(
+        screenState = screenState,
+        onConfirmPurchase = { viewModel.confirmPurchase() },
+        onSuccessfulPurchase = onSuccessfulPurchase,
+        onCancelPurchase = onCancelPurchase
+    )
 }
 
 @Composable
 private fun PurchaseConfirmationScreenContent(
     screenState: PurchaseConfirmationScreenState,
     onConfirmPurchase: () -> Unit,
+    onSuccessfulPurchase: () -> Unit,
     onCancelPurchase: () -> Unit
 ) {
     when (screenState) {
@@ -53,7 +62,7 @@ private fun PurchaseConfirmationScreenContent(
         }
 
         PurchaseConfirmationScreenState.Success -> {
-            PurchaseConfirmationScreenSuccessContent()
+            onSuccessfulPurchase()
         }
     }
 }
@@ -92,15 +101,18 @@ private fun PurchaseConfirmationScreenCreatedContent(
 
 @Composable
 private fun PurchaseConfirmationScreenErrorContent() {
-
+    Box(modifier = Modifier.fillMaxSize()) {
+        Text(
+            text = stringResource(R.string.error),
+            modifier = Modifier.align(Center),
+            style = typography.titleSmall
+        )
+    }
 }
 
 @Composable
 private fun PurchaseConfirmationScreenLoadingContent() {
-
-}
-
-@Composable
-private fun PurchaseConfirmationScreenSuccessContent() {
-
+    Box(modifier = Modifier.fillMaxSize()) {
+        CircularProgressIndicator(modifier = Modifier.align(Center))
+    }
 }
