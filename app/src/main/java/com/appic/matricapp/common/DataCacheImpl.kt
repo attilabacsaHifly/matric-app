@@ -4,12 +4,12 @@ import com.appic.matricapp.ui.screens.models.Info
 import com.appic.matricapp.ui.screens.models.VehicleInfo
 import com.appic.matricapp.ui.screens.models.Vignette
 
-class CacheImpl : Cache {
+class DataCacheImpl : DataCache {
 
     private var info: Info? = null
     private var vehicleInfo: VehicleInfo? = null
 
-    private val selectedVignettes = mutableListOf<Vignette>()
+    private val selectedNameVignettePairs = mutableListOf<Pair<String, Vignette>>()
 
     override fun cacheInfo(info: Info) {
         this.info = info
@@ -27,25 +27,29 @@ class CacheImpl : Cache {
         return vehicleInfo
     }
 
-    override fun addVignetteToSelected(vignette: Vignette) {
+    override fun addNameVignettePairToSelected(pair: Pair<String, Vignette>) {
         // Remove any yearly county vignettes to avoid possible conflict between selections
-        if (selectedVignettes.any()) {
-            selectedVignettes.clear()
+        if (selectedNameVignettePairs.any()) {
+            selectedNameVignettePairs.clear()
         }
 
-        selectedVignettes.add(vignette)
+        selectedNameVignettePairs.add(pair)
     }
 
-    override fun addVignettesToSelected(vignettes: List<Vignette>) {
+    override fun addNameVignettePairsToSelected(pairs: List<Pair<String, Vignette>>) {
         // Remove selected country vignette to avoid possible conflict between selections
-        if (selectedVignettes.any()) {
-            selectedVignettes.clear()
+        if (selectedNameVignettePairs.any()) {
+            selectedNameVignettePairs.clear()
         }
 
-        selectedVignettes.addAll(vignettes)
+        selectedNameVignettePairs.addAll(pairs)
     }
 
-    override fun removeVignetteFromSelected(vignette: Vignette) {
-        selectedVignettes.remove(vignette)
+    override fun getSelectedNameVignettePairs(): List<Pair<String, Vignette>> {
+        return selectedNameVignettePairs
+    }
+
+    override fun removeNameVignettePairFromSelected(pair: Pair<String, Vignette>) {
+        selectedNameVignettePairs.remove(pair)
     }
 }

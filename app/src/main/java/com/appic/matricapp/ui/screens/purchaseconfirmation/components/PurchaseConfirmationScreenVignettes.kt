@@ -21,8 +21,10 @@ import com.appic.matricapp.ui.screens.models.Vignette
 import com.appic.matricapp.ui.theme.MatricAppTheme
 
 @Composable
-fun PurchaseConfirmationScreenVignettes(vignettes: List<Vignette>) {
-    vignettes.forEach {
+fun PurchaseConfirmationScreenVignettes(
+    displayedNameNameVignettePairs: List<Pair<String, Vignette>>
+) {
+    displayedNameNameVignettePairs.forEach {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -30,8 +32,11 @@ fun PurchaseConfirmationScreenVignettes(vignettes: List<Vignette>) {
             horizontalArrangement = SpaceBetween,
             verticalAlignment = CenterVertically
         ) {
-            Text("TODO", style = typography.bodyLarge)
-            Text(stringResource(R.string.huf, it.cost.toInt()), style = typography.bodyMedium)
+            Text(text = it.first, style = typography.bodyLarge)
+            Text(
+                text = stringResource(R.string.huf, it.second.cost.toInt()),
+                style = typography.bodyMedium
+            )
         }
     }
 
@@ -47,7 +52,10 @@ fun PurchaseConfirmationScreenVignettes(vignettes: List<Vignette>) {
     ) {
         Text(text = stringResource(R.string.trx_fee), style = typography.labelMedium)
         Text(
-            text = stringResource(R.string.huf, vignettes.sumOf { it.trxFee }.toInt()),
+            text = stringResource(
+                R.string.huf,
+                displayedNameNameVignettePairs.sumOf { it.second.trxFee }.toInt()
+            ),
             style = typography.bodyMedium
         )
     }
@@ -62,12 +70,15 @@ private fun PurchaseConfirmationScreenVignettesPreview(modifier: Modifier = Modi
         Column {
             PurchaseConfirmationScreenVignettes(
                 listOf(
-                    Vignette(
-                        category = Category.CAR,
-                        vignetteCategory = VignetteCategory.D1,
-                        vignetteTypes = listOf(),
-                        cost = 4.5,
-                        trxFee = 6.7
+                    Pair(
+                        "Baranya megye",
+                        Vignette(
+                            category = Category.CAR,
+                            vignetteCategory = VignetteCategory.D1,
+                            vignetteTypes = listOf(),
+                            cost = 4650.5,
+                            trxFee = 210.7
+                        )
                     )
                 )
             )

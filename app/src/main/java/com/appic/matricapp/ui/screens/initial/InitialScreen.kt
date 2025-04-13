@@ -26,7 +26,6 @@ import com.appic.matricapp.network.models.VignetteType
 import com.appic.matricapp.ui.screens.initial.components.InitialScreenCountryVignettesCard
 import com.appic.matricapp.ui.screens.initial.components.InitialScreenVehicleInfoCard
 import com.appic.matricapp.ui.screens.initial.components.InitialScreenYearlyCountyVignettesCard
-import com.appic.matricapp.ui.screens.models.Info
 import com.appic.matricapp.ui.screens.models.VehicleInfo
 import com.appic.matricapp.ui.screens.models.Vignette
 import com.appic.matricapp.ui.theme.MatricAppTheme
@@ -37,7 +36,7 @@ fun InitialScreen(
     onConfirmPurchase: () -> Unit
 ) {
     val viewModel: InitialScreenViewModel = hiltViewModel()
-    val state by viewModel.initialScreenState.collectAsState()
+    val state by viewModel.screenState.collectAsState()
 
     InitialScreenContent(
         screenState = state,
@@ -54,7 +53,7 @@ fun InitialScreen(
 private fun InitialScreenContent(
     screenState: InitialScreenState,
     onCreated: () -> Unit,
-    onConfirmPurchase: (Vignette) -> Unit,
+    onConfirmPurchase: (Pair<String, Vignette>) -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
     when (screenState) {
@@ -68,7 +67,7 @@ private fun InitialScreenContent(
 
         is InitialScreenState.Loaded -> {
             InitialScreenLoadedContent(
-                info = screenState.info,
+                displayedNameVignettePairs = screenState.displayedNameVignettePairs,
                 vehicleInfo = screenState.vehicleInfo,
                 onConfirmPurchase = onConfirmPurchase,
                 onSelectCountyVignettes = onSelectCountyVignettes
@@ -90,9 +89,9 @@ private fun InitialScreenLoadingContent() {
 
 @Composable
 private fun InitialScreenLoadedContent(
-    info: Info,
+    displayedNameVignettePairs: List<Pair<Int, Vignette>>,
     vehicleInfo: VehicleInfo,
-    onConfirmPurchase: (Vignette) -> Unit,
+    onConfirmPurchase: (Pair<String, Vignette>) -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
     Column(
@@ -103,7 +102,7 @@ private fun InitialScreenLoadedContent(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.dp_16))
     ) {
         InitialScreenVehicleInfoCard(vehicleInfo)
-        InitialScreenCountryVignettesCard(info.vignettes, onConfirmPurchase)
+        InitialScreenCountryVignettesCard(displayedNameVignettePairs, onConfirmPurchase)
         InitialScreenYearlyCountyVignettesCard { onSelectCountyVignettes() }
     }
 }
@@ -125,32 +124,49 @@ private fun InitialScreenContentPreview() {
     MatricAppTheme {
         InitialScreenContent(
             screenState = InitialScreenState.Loaded(
-                info = Info(
-                    vignettes = listOf(
+                displayedNameVignettePairs = listOf(
+                    Pair(
+                        R.string.vignette_type_day,
                         Vignette(
                             category = Category.CAR,
                             vignetteCategory = VignetteCategory.D1,
                             vignetteTypes = listOf(VignetteType.DAY),
-                            cost = 4500.5,
-                            trxFee = 160.7
-                        ),
-                        Vignette(
-                            category = Category.CAR,
-                            vignetteCategory = VignetteCategory.D1,
-                            vignetteTypes = listOf(VignetteType.WEEK),
-                            cost = 6500.5,
-                            trxFee = 160.7
-                        ),
-                        Vignette(
-                            category = Category.CAR,
-                            vignetteCategory = VignetteCategory.D1,
-                            vignetteTypes = listOf(VignetteType.MONTH),
-                            cost = 11500.5,
-                            trxFee = 160.7
+                            cost = 4.5,
+                            trxFee = 6.7
                         )
                     ),
-                    counties = listOf()
-                ), vehicleInfo = VehicleInfo(
+                    Pair(
+                        R.string.vignette_type_day,
+                        Vignette(
+                            category = Category.CAR,
+                            vignetteCategory = VignetteCategory.D1,
+                            vignetteTypes = listOf(VignetteType.DAY),
+                            cost = 4.5,
+                            trxFee = 6.7
+                        )
+                    ),
+                    Pair(
+                        R.string.vignette_type_day,
+                        Vignette(
+                            category = Category.CAR,
+                            vignetteCategory = VignetteCategory.D1,
+                            vignetteTypes = listOf(VignetteType.DAY),
+                            cost = 4.5,
+                            trxFee = 6.7
+                        )
+                    ),
+                    Pair(
+                        R.string.vignette_type_day,
+                        Vignette(
+                            category = Category.CAR,
+                            vignetteCategory = VignetteCategory.D1,
+                            vignetteTypes = listOf(VignetteType.DAY),
+                            cost = 4.5,
+                            trxFee = 6.7
+                        )
+                    )
+                ),
+                vehicleInfo = VehicleInfo(
                     vehicleOwnerName = "Teszt Elek",
                     vehiclePlate = "ABC - 123"
                 )

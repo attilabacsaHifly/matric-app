@@ -1,7 +1,7 @@
 package com.appic.matricapp.injection
 
-import com.appic.matricapp.common.Cache
-import com.appic.matricapp.common.CacheImpl
+import com.appic.matricapp.common.DataCache
+import com.appic.matricapp.common.DataCacheImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +14,7 @@ object CommonModule {
 
     @Provides
     @Singleton
-    fun provideCache(): Cache {
-        return CacheImpl()
+    fun provideDataCache(): DataCache {
+        return DataCacheImpl()
     }
 }

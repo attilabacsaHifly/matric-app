@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -18,12 +20,40 @@ import com.appic.matricapp.ui.screens.purchaseconfirmation.components.PurchaseCo
 @Composable
 fun PurchaseConfirmationScreen() {
     val viewModel: PurchaseConfirmationScreenViewModel = hiltViewModel()
+    val screenState by viewModel.screenState.collectAsState()
 
-    PurchaseConfirmationScreenContent("ABC- 123", listOf()) // TODO
+    PurchaseConfirmationScreenContent(screenState)
 }
 
 @Composable
-private fun PurchaseConfirmationScreenContent(vehiclePlate: String, vignettes: List<Vignette>) {
+private fun PurchaseConfirmationScreenContent(screenState: PurchaseConfirmationScreenState) {
+    when (screenState) {
+        is PurchaseConfirmationScreenState.Created -> {
+            PurchaseConfirmationScreenCreatedContent(
+                vehiclePlate = screenState.vehiclePlate,
+                displayedNameNameVignettePairs = screenState.displayedNameNameVignettePairs
+            )
+        }
+
+        PurchaseConfirmationScreenState.Error -> {
+            PurchaseConfirmationScreenErrorContent()
+        }
+
+        PurchaseConfirmationScreenState.Loading -> {
+            PurchaseConfirmationScreenLoadingContent()
+        }
+
+        PurchaseConfirmationScreenState.Success -> {
+            PurchaseConfirmationScreenSuccessContent()
+        }
+    }
+}
+
+@Composable
+private fun PurchaseConfirmationScreenCreatedContent(
+    vehiclePlate: String,
+    displayedNameNameVignettePairs: List<Pair<String, Vignette>>
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,7 +65,25 @@ private fun PurchaseConfirmationScreenContent(vehiclePlate: String, vignettes: L
             style = typography.headlineSmall
         )
 
-        PurchaseConfirmationScreenHeader(vehiclePlate, vignettes.first().vignetteTypes.first())
-        PurchaseConfirmationScreenVignettes(vignettes)
+        PurchaseConfirmationScreenHeader(
+            vehiclePlate = vehiclePlate,
+            vignetteType = displayedNameNameVignettePairs.first().second.vignetteTypes.first()
+        )
+        PurchaseConfirmationScreenVignettes(displayedNameNameVignettePairs)
     }
+}
+
+@Composable
+private fun PurchaseConfirmationScreenErrorContent() {
+
+}
+
+@Composable
+private fun PurchaseConfirmationScreenLoadingContent() {
+
+}
+
+@Composable
+private fun PurchaseConfirmationScreenSuccessContent() {
+
 }

@@ -4,7 +4,7 @@ import com.appic.matricapp.ui.screens.models.Info
 import com.appic.matricapp.ui.screens.models.VehicleInfo
 import com.appic.matricapp.ui.screens.models.Vignette
 
-interface Cache {
+interface DataCache {
     fun cacheInfo(info: Info)
     fun cacheVehicleInfo(vehicleInfo: VehicleInfo)
     fun getInfo(): Info?
@@ -13,11 +13,12 @@ interface Cache {
     /**
      * Add a single country vignette to the selection.
      */
-    fun addVignetteToSelected(vignette: Vignette)
+    fun addNameVignettePairToSelected(pair: Pair<String, Vignette>)
 
     /**
      * Add one or more yearly county vignette(s) to the selection.
      */
-    fun addVignettesToSelected(vignettes: List<Vignette>)
-    fun removeVignetteFromSelected(vignette: Vignette)
+    fun addNameVignettePairsToSelected(pairs: List<Pair<String, Vignette>>)
+    fun getSelectedNameVignettePairs(): List<Pair<String, Vignette>>
+    fun removeNameVignettePairFromSelected(pair: Pair<String, Vignette>)
 }

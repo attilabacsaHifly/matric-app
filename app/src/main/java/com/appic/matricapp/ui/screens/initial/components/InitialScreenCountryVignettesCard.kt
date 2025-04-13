@@ -33,8 +33,8 @@ import com.appic.matricapp.ui.theme.MatricAppTheme
 
 @Composable
 fun InitialScreenCountryVignettesCard(
-    vignettes: List<Vignette>,
-    onConfirmPurchase: (Vignette) -> Unit
+    displayedNameVignettePairs: List<Pair<Int, Vignette>>,
+    onConfirmPurchase: (Pair<String, Vignette>) -> Unit
 ) {
     var selectedIndex by remember { mutableStateOf<Int?>(null) }
 
@@ -46,7 +46,7 @@ fun InitialScreenCountryVignettesCard(
                 style = typography.headlineSmall
             )
 
-            vignettes.forEachIndexed { index, vignette ->
+            displayedNameVignettePairs.forEachIndexed { index, nameVignettePair ->
                 OutlinedCard(
                     onClick = { selectedIndex = index },
                     modifier = Modifier.padding(vertical = dimensionResource(R.dimen.dp_4)),
@@ -65,12 +65,12 @@ fun InitialScreenCountryVignettesCard(
                                 onClick = { selectedIndex = index }
                             )
 
-                            val vignetteCategoryName = vignette.vignetteCategory.name
-                            val vignetteTypeName = stringResource(
-                                vignette.vignetteTypes.first().toStringResource()
-                            )
+                            val displayedName =
+                                "${displayedNameVignettePairs[index].second.vignetteCategory.name} - " +
+                                        stringResource(displayedNameVignettePairs[index].first)
+
                             Text(
-                                text = "$vignetteCategoryName - $vignetteTypeName",
+                                text = displayedName,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
                                 style = typography.bodyLarge
@@ -78,17 +78,26 @@ fun InitialScreenCountryVignettesCard(
                         }
 
                         Text(
-                            text = stringResource(R.string.huf, vignette.cost.toInt()),
+                            text = stringResource(
+                                R.string.huf,
+                                nameVignettePair.second.cost.toInt()
+                            ),
                             style = typography.titleSmall
                         )
                     }
                 }
             }
 
+            val displayedName = selectedIndex?.let {
+                "${displayedNameVignettePairs[it].second.vignetteCategory.name} - " +
+                        stringResource(displayedNameVignettePairs[it].first)
+            } ?: ""
             Button(
                 onClick = {
                     selectedIndex?.let {
-                        onConfirmPurchase(vignettes[it])
+                        onConfirmPurchase(
+                            Pair(displayedName, displayedNameVignettePairs[it].second)
+                        )
                     }
                 },
                 modifier = Modifier
@@ -112,46 +121,49 @@ fun InitialScreenCountryVignettesCard(
 private fun InitialScreenCountryVignettesCardPreview() {
     MatricAppTheme {
         InitialScreenCountryVignettesCard(
-            vignettes = listOf(
-                Vignette(
-                    category = Category.CAR,
-                    vignetteCategory = VignetteCategory.D1,
-                    vignetteTypes = listOf(VignetteType.DAY),
-                    cost = 5600.0,
-                    trxFee = 110.0
+            displayedNameVignettePairs = listOf(
+                Pair(
+                    R.string.vignette_type_day,
+                    Vignette(
+                        category = Category.CAR,
+                        vignetteCategory = VignetteCategory.D1,
+                        vignetteTypes = listOf(VignetteType.DAY),
+                        cost = 5600.0,
+                        trxFee = 110.0
+                    )
                 ),
-                Vignette(
-                    category = Category.CAR,
-                    vignetteCategory = VignetteCategory.D1,
-                    vignetteTypes = listOf(VignetteType.WEEK),
-                    cost = 4500.5,
-                    trxFee = 110.0
+                Pair(
+                    R.string.vignette_type_week,
+                    Vignette(
+                        category = Category.CAR,
+                        vignetteCategory = VignetteCategory.D1,
+                        vignetteTypes = listOf(VignetteType.DAY),
+                        cost = 5600.0,
+                        trxFee = 110.0
+                    )
                 ),
-                Vignette(
-                    category = Category.CAR,
-                    vignetteCategory = VignetteCategory.D1,
-                    vignetteTypes = listOf(VignetteType.MONTH),
-                    cost = 8750.2,
-                    trxFee = 110.0
+                Pair(
+                    R.string.vignette_type_month,
+                    Vignette(
+                        category = Category.CAR,
+                        vignetteCategory = VignetteCategory.D1,
+                        vignetteTypes = listOf(VignetteType.DAY),
+                        cost = 5600.0,
+                        trxFee = 110.0
+                    )
                 ),
-                Vignette(
-                    category = Category.CAR,
-                    vignetteCategory = VignetteCategory.D1,
-                    vignetteTypes = listOf(VignetteType.YEAR),
-                    cost = 2560.3,
-                    trxFee = 110.0
+                Pair(
+                    R.string.vignette_type_month,
+                    Vignette(
+                        category = Category.CAR,
+                        vignetteCategory = VignetteCategory.D1,
+                        vignetteTypes = listOf(VignetteType.DAY),
+                        cost = 5600.0,
+                        trxFee = 110.0
+                    )
                 )
             ),
             onConfirmPurchase = {}
         )
-    }
-}
-
-private fun VignetteType.toStringResource(): Int {
-    return when (this) {
-        VignetteType.DAY -> R.string.vignette_type_day
-        VignetteType.WEEK -> R.string.vignette_type_week
-        VignetteType.MONTH -> R.string.vignette_type_month
-        else -> R.string.vignette_type_year
     }
 }

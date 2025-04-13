@@ -32,8 +32,8 @@ import com.appic.matricapp.ui.theme.MatricAppTheme
 @Composable
 fun ColumnScope.CountyVignettesScreenVignetteList(
     countyNameVignettePairs: List<Pair<String, Vignette>>,
-    onVignetteSelected: (Vignette) -> Unit,
-    onVignetteDeselected: (Vignette) -> Unit
+    onVignetteSelected: (Pair<String, Vignette>) -> Unit,
+    onVignetteDeselected: (Pair<String, Vignette>) -> Unit
 ) {
     val checkedStates = remember { countyNameVignettePairs.map { false }.toMutableStateList() }
     LazyColumn(
@@ -49,9 +49,9 @@ fun ColumnScope.CountyVignettesScreenVignetteList(
                         checkedStates[index] = !checkedStates[index]
 
                         if (checkedStates[index]) {
-                            onVignetteSelected(item.second)
+                            onVignetteSelected(item)
                         } else {
-                            onVignetteDeselected(item.second)
+                            onVignetteDeselected(item)
                         }
                     },
                 horizontalArrangement = SpaceBetween,
@@ -64,9 +64,9 @@ fun ColumnScope.CountyVignettesScreenVignetteList(
                             checkedStates[index] = isChecked
 
                             if (isChecked) {
-                                onVignetteSelected(item.second)
+                                onVignetteSelected(item)
                             } else {
-                                onVignetteDeselected(item.second)
+                                onVignetteDeselected(item)
                             }
                         })
                     Text(

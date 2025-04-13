@@ -1,7 +1,7 @@
 package com.appic.matricapp.ui.screens.countyvignettes
 
 import androidx.lifecycle.ViewModel
-import com.appic.matricapp.common.Cache
+import com.appic.matricapp.common.DataCache
 import com.appic.matricapp.network.models.VignetteType
 import com.appic.matricapp.ui.screens.models.Vignette
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,10 +10,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 @HiltViewModel
-class CountyVignettesScreenViewModel @Inject constructor(private val cache: Cache) : ViewModel() {
+class CountyVignettesScreenViewModel @Inject constructor(
+    private val dataCache: DataCache
+) : ViewModel() {
 
-    private val countyNameVignettePairsFlow = MutableStateFlow(initCountyNameVignettePairs())
-    val countyNameVignettePairs = countyNameVignettePairsFlow.asStateFlow()
+    private val displayedNameNameVignettePairsFlow =
+        MutableStateFlow(initDisplayedNameNameVignettePairs())
+    val displayedNameVignettePairs = displayedNameNameVignettePairsFlow.asStateFlow()
 
     private val amountToPayFlow = MutableStateFlow(0.0)
     val amountToPay = amountToPayFlow.asStateFlow()
@@ -21,28 +24,28 @@ class CountyVignettesScreenViewModel @Inject constructor(private val cache: Cach
     private val isConfirmPurchaseEnabledFlow = MutableStateFlow(false)
     val isConfirmPurchaseEnabled = isConfirmPurchaseEnabledFlow.asStateFlow()
 
-    private val selectedVignettes = mutableListOf<Vignette>()
+    private val selectedNameVignettePairs = mutableListOf<Pair<String, Vignette>>()
 
-    fun onVignetteSelected(vignette: Vignette) {
-        selectedVignettes.add(vignette)
+    fun onVignetteSelected(nameVignettePair: Pair<String, Vignette>) {
+        selectedNameVignettePairs.add(nameVignettePair)
 
-        amountToPayFlow.tryEmit(selectedVignettes.sumOf { it.cost })
-        isConfirmPurchaseEnabledFlow.tryEmit(selectedVignettes.any())
+        amountToPayFlow.tryEmit(selectedNameVignettePairs.sumOf { it.second.cost })
+        isConfirmPurchaseEnabledFlow.tryEmit(selectedNameVignettePairs.any())
     }
 
-    fun onVignetteDeselected(vignette: Vignette) {
-        selectedVignettes.remove(vignette)
+    fun onVignetteDeselected(nameVignettePair: Pair<String, Vignette>) {
+        selectedNameVignettePairs.remove(nameVignettePair)
 
-        amountToPayFlow.tryEmit(selectedVignettes.sumOf { it.cost })
-        isConfirmPurchaseEnabledFlow.tryEmit(selectedVignettes.any())
+        amountToPayFlow.tryEmit(selectedNameVignettePairs.sumOf { it.second.cost })
+        isConfirmPurchaseEnabledFlow.tryEmit(selectedNameVignettePairs.any())
     }
 
     fun onConfirmPurchase() {
-        cache.addVignettesToSelected(selectedVignettes)
+        dataCache.addNameVignettePairsToSelected(selectedNameVignettePairs)
     }
 
-    private fun initCountyNameVignettePairs(): List<Pair<String, Vignette>> {
-        val cachedInfo = cache.getInfo() ?: return emptyList()
+    private fun initDisplayedNameNameVignettePairs(): List<Pair<String, Vignette>> {
+        val cachedInfo = dataCache.getInfo() ?: return emptyList()
 
         val yearlyVignettes = cachedInfo.vignettes.filter { vignette ->
             vignette.vignetteTypes.none { vignetteType ->

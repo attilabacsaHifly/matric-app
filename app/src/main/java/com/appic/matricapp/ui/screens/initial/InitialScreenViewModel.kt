@@ -2,7 +2,8 @@ package com.appic.matricapp.ui.screens.initial
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.appic.matricapp.common.Cache
+import com.appic.matricapp.R
+import com.appic.matricapp.common.DataCache
 import com.appic.matricapp.injection.IODispatcher
 import com.appic.matricapp.interactor.HighwayVignetteInteractor
 import com.appic.matricapp.network.models.VignetteType
@@ -21,16 +22,15 @@ import kotlinx.coroutines.launch
 class InitialScreenViewModel @Inject constructor(
     @IODispatcher private val ioDispatcher: CoroutineDispatcher,
     private val interactor: HighwayVignetteInteractor,
-    private val cache: Cache
+    private val dataCache: DataCache
 ) : ViewModel() {
 
-    private val initialScreenStateFlow =
-        MutableStateFlow<InitialScreenState>(InitialScreenState.Created)
-    val initialScreenState = initialScreenStateFlow.asStateFlow()
+    private val screenStateFlow = MutableStateFlow<InitialScreenState>(InitialScreenState.Created)
+    val screenState = screenStateFlow.asStateFlow()
 
     fun loadScreen() {
         viewModelScope.launch(ioDispatcher) {
-            initialScreenStateFlow.emit(InitialScreenState.Loading)
+            screenStateFlow.emit(InitialScreenState.Loading)
 
             val infoDeferred = async {
                 runCatching {
@@ -47,13 +47,13 @@ class InitialScreenViewModel @Inject constructor(
         }
     }
 
-    fun onConfirmPurchase(vignette: Vignette) {
-        cache.addVignetteToSelected(vignette)
+    fun onConfirmPurchase(nameVignettePairs: Pair<String, Vignette>) {
+        dataCache.addNameVignettePairToSelected(nameVignettePairs)
     }
 
     private suspend fun onScreenLoaded(info: Info?, vehicleInfo: VehicleInfo?) {
         if (info == null || vehicleInfo == null) {
-            initialScreenStateFlow.emit(InitialScreenState.Error)
+            screenStateFlow.emit(InitialScreenState.Error)
         } else {
             val filteredInfo = info.copy(vignettes = info.vignettes.filter { vignette ->
                 vignette.vignetteTypes.all { vignetteType ->
@@ -64,10 +64,24 @@ class InitialScreenViewModel @Inject constructor(
                 }
             })
 
-            initialScreenStateFlow.emit(InitialScreenState.Loaded(filteredInfo, vehicleInfo))
+            val displayedNameVignettePairs = filteredInfo.vignettes.map {
+                Pair(it.vignetteTypes.first().toStringResource(), it)
+            }
+            screenStateFlow.emit(
+                InitialScreenState.Loaded(displayedNameVignettePairs, vehicleInfo)
+            )
 
-            cache.cacheInfo(info)
-            cache.cacheVehicleInfo(vehicleInfo)
+            dataCache.cacheInfo(info)
+            dataCache.cacheVehicleInfo(vehicleInfo)
+        }
+    }
+
+    private fun VignetteType.toStringResource(): Int {
+        return when (this) {
+            VignetteType.DAY -> R.string.vignette_type_day
+            VignetteType.WEEK -> R.string.vignette_type_week
+            VignetteType.MONTH -> R.string.vignette_type_month
+            else -> R.string.vignette_type_year
         }
     }
 }

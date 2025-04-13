@@ -27,7 +27,7 @@ import com.appic.matricapp.ui.screens.models.Vignette
 fun CountyVignettesScreen(onConfirmPurchase: () -> Unit) {
     val viewModel: CountyVignettesScreenViewModel = hiltViewModel()
 
-    val countyNameVignettePairs by viewModel.countyNameVignettePairs.collectAsState()
+    val countyNameVignettePairs by viewModel.displayedNameVignettePairs.collectAsState()
     val amountToPay by viewModel.amountToPay.collectAsState()
     val isConfirmPurchaseEnabled by viewModel.isConfirmPurchaseEnabled.collectAsState()
 
@@ -49,8 +49,8 @@ private fun CountyVignettesScreenContent(
     countyNameVignettePairs: List<Pair<String, Vignette>>,
     amountToPay: Double,
     isConfirmPurchaseEnabled: Boolean,
-    onVignetteSelected: (Vignette) -> Unit,
-    onVignetteDeselected: (Vignette) -> Unit,
+    onVignetteSelected: (Pair<String, Vignette>) -> Unit,
+    onVignetteDeselected: (Pair<String, Vignette>) -> Unit,
     onConfirmPurchase: () -> Unit
 ) {
     Column(

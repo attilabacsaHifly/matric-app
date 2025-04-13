@@ -10,7 +10,7 @@
     <string name="vignette_type_week">heti (10 napos)</string>
     <string name="vignette_type_month">havi</string>
     <string name="vignette_type_year">éves</string>
-    <string name="vignette_type_year_county">Éves vármegyei</string>
+    <string name="vignette_type_year_county">éves vármegyei</string>
 
     <string name="confirm_purchase">Vásárlás megerősítése</string>
     <string name="vehicle_plate">Rendszám</string>
