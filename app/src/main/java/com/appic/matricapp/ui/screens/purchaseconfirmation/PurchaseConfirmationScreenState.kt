@@ -5,7 +5,7 @@ import com.appic.matricapp.ui.screens.models.Vignette
 sealed interface PurchaseConfirmationScreenState {
     data class Created(
         val vehiclePlate: String,
-        val displayedNameNameVignettePairs: List<Pair<String, Vignette>>
+        val nameVignettePairs: List<Pair<String, Vignette>>
     ) : PurchaseConfirmationScreenState
 
     data object Loading : PurchaseConfirmationScreenState

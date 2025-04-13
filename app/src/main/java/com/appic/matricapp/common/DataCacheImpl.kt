@@ -28,7 +28,7 @@ class DataCacheImpl : DataCache {
     }
 
     override fun addNameVignettePairToSelected(pair: Pair<String, Vignette>) {
-        // Remove any yearly county vignettes to avoid possible conflict between selections
+        // Clear selection to avoid possible conflict between previous selections
         if (selectedNameVignettePairs.any()) {
             selectedNameVignettePairs.clear()
         }
@@ -37,7 +37,7 @@ class DataCacheImpl : DataCache {
     }
 
     override fun addNameVignettePairsToSelected(pairs: List<Pair<String, Vignette>>) {
-        // Remove selected country vignette to avoid possible conflict between selections
+        // Clear selection to avoid possible conflict between previous selections
         if (selectedNameVignettePairs.any()) {
             selectedNameVignettePairs.clear()
         }

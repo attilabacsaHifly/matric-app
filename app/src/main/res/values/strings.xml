@@ -4,7 +4,7 @@
     <string name="app_title">E-matrica</string>
     <string name="country_vignettes">Országos matricák</string>
     <string name="yearly_county_vignettes">Éves vármegyei matricák</string>
-    <string name="purchase">Vásárlás</string>
+
 
     <string name="vignette_type_day">napi (1 napos)</string>
     <string name="vignette_type_week">heti (10 napos)</string>
@@ -22,6 +22,8 @@
     <string name="next">Tovább</string>
     <string name="amount_to_pay">Fizetendő összeg</string>
     <string name="all_right">Rendben</string>
+    <string name="purchase">Vásárlás</string>
+    <string name="cancel">Mégsem</string>
     <string name="error">Hiba történt, próbáld meg később!</string>
     <string name="huf">%1$d Ft</string>
 </resources>

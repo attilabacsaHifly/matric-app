@@ -43,10 +43,7 @@ fun PurchaseConfirmationScreenVignettes(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                top = dimensionResource(R.dimen.dp_8),
-                bottom = dimensionResource(R.dimen.dp_32)
-            ),
+            .padding(top = dimensionResource(R.dimen.dp_8)),
         horizontalArrangement = SpaceBetween,
         verticalAlignment = CenterVertically
     ) {
@@ -60,7 +57,7 @@ fun PurchaseConfirmationScreenVignettes(
         )
     }
 
-    HorizontalDivider()
+    HorizontalDivider(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.dp_24)))
 }
 
 @Composable

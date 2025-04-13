@@ -3,6 +3,8 @@ package com.appic.matricapp.ui.screens.purchaseconfirmation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,24 +16,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.appic.matricapp.R
 import com.appic.matricapp.ui.screens.models.Vignette
+import com.appic.matricapp.ui.screens.purchaseconfirmation.components.PurchaseConfirmationScreenFooter
 import com.appic.matricapp.ui.screens.purchaseconfirmation.components.PurchaseConfirmationScreenHeader
 import com.appic.matricapp.ui.screens.purchaseconfirmation.components.PurchaseConfirmationScreenVignettes
 
 @Composable
-fun PurchaseConfirmationScreen() {
+fun PurchaseConfirmationScreen(onCancelPurchase: () -> Unit) {
     val viewModel: PurchaseConfirmationScreenViewModel = hiltViewModel()
     val screenState by viewModel.screenState.collectAsState()
 
-    PurchaseConfirmationScreenContent(screenState)
+    PurchaseConfirmationScreenContent(screenState, {}, onCancelPurchase)
 }
 
 @Composable
-private fun PurchaseConfirmationScreenContent(screenState: PurchaseConfirmationScreenState) {
+private fun PurchaseConfirmationScreenContent(
+    screenState: PurchaseConfirmationScreenState,
+    onConfirmPurchase: () -> Unit,
+    onCancelPurchase: () -> Unit
+) {
     when (screenState) {
         is PurchaseConfirmationScreenState.Created -> {
             PurchaseConfirmationScreenCreatedContent(
                 vehiclePlate = screenState.vehiclePlate,
-                displayedNameNameVignettePairs = screenState.displayedNameNameVignettePairs
+                nameNameVignettePairs = screenState.nameVignettePairs,
+                onConfirmPurchase = onConfirmPurchase,
+                onCancelPurchase = onCancelPurchase
             )
         }
 
@@ -52,11 +61,14 @@ private fun PurchaseConfirmationScreenContent(screenState: PurchaseConfirmationS
 @Composable
 private fun PurchaseConfirmationScreenCreatedContent(
     vehiclePlate: String,
-    displayedNameNameVignettePairs: List<Pair<String, Vignette>>
+    nameNameVignettePairs: List<Pair<String, Vignette>>,
+    onConfirmPurchase: () -> Unit,
+    onCancelPurchase: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(dimensionResource(R.dimen.dp_20))
     ) {
         Text(
@@ -67,9 +79,14 @@ private fun PurchaseConfirmationScreenCreatedContent(
 
         PurchaseConfirmationScreenHeader(
             vehiclePlate = vehiclePlate,
-            vignetteType = displayedNameNameVignettePairs.first().second.vignetteTypes.first()
+            vignetteType = nameNameVignettePairs.first().second.vignetteTypes.first()
         )
-        PurchaseConfirmationScreenVignettes(displayedNameNameVignettePairs)
+        PurchaseConfirmationScreenVignettes(nameNameVignettePairs)
+        PurchaseConfirmationScreenFooter(
+            amountToPay = nameNameVignettePairs.sumOf { it.second.cost + it.second.trxFee }.toInt(),
+            onConfirmPurchase = onConfirmPurchase,
+            onCancelPurchase = onCancelPurchase
+        )
     }
 }
 
