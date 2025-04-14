@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">MatricApp</string>
+
+    <string name="app_title">E-matrica</string>
+    <string name="country_vignettes">Országos matricák</string>
+    <string name="yearly_county_vignettes">Éves vármegyei matricák</string>
+
+
+    <string name="vignette_type_day">napi (1 napos)</string>
+    <string name="vignette_type_week">heti (10 napos)</string>
+    <string name="vignette_type_month">havi</string>
+    <string name="vignette_type_year">éves</string>
+    <string name="vignette_type_year_county">éves vármegyei</string>
+
+    <string name="confirm_purchase">Vásárlás megerősítése</string>
+    <string name="vehicle_plate">Rendszám</string>
+    <string name="vignette_type">Matrica típusa</string>
+    <string name="trx_fee">Rendszerhasználati díj</string>
+
+    <string name="vignettes_purchased_successfully">A matricákat sikeresen kifizetted!</string>
+
+    <string name="next">Tovább</string>
+    <string name="amount_to_pay">Fizetendő összeg</string>
+    <string name="all_right">Rendben</string>
+    <string name="purchase">Vásárlás</string>
+    <string name="cancel">Mégsem</string>
+    <string name="error">Hiba történt, próbáld meg később!</string>
+    <string name="huf">%1$d Ft</string>
+</resources>
