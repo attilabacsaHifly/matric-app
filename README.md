@@ -27,7 +27,7 @@ This application serves as a technical assignment for developer candidates. It d
 - **Platform:** Native Android
 - **UI Toolkit:** Jetpack Compose
 - **Architecture:** MVVM (Model-View-ViewModel)
-- **Asynchronous Programming:** Kotlin Coroutines and Flows
+- **Asynchronous Programming:** Kotlin Coroutines with Flows
 - **Dependency Injection:** Hilt
 - **Networking:** Retrofit
 
@@ -59,6 +59,17 @@ adb reverse tcp:<PORT_NUMBER> tcp:<PORT_NUMBER>
 ```
 
 > Replace `<PORT_NUMBER>` with the actual backend port, e.g., `8080`.
+
+### ⚠️ Cleartext Traffic Notice
+
+The backend uses `http` instead of `https`, so you must enable **cleartext traffic** in your Android project.  
+Make sure your `AndroidManifest.xml` contains the following inside the `<application>` tag:
+
+```xml
+<application
+    android:usesCleartextTraffic="true"
+    ... >
+```
 
 ---
 
