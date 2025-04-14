@@ -22,7 +22,7 @@ class PurchaseConfirmationScreenViewModel @Inject constructor(
     private val screenStateFlow = MutableStateFlow<PurchaseConfirmationScreenState>(
         PurchaseConfirmationScreenState.Created(
             vehiclePlate = dataCache.getVehicleInfo()?.vehiclePlate ?: "",
-            nameVignettePairs = dataCache.getSelectedNameVignettePairs()
+            nameVignettePairs = dataCache.getSelectedNameVignettePairs().sortedBy { it.first }
         )
     )
     val screenState = screenStateFlow.asStateFlow()

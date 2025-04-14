@@ -25,10 +25,10 @@ class InitialScreenViewModel @Inject constructor(
     private val dataCache: DataCache
 ) : ViewModel() {
 
-    private val screenStateFlow = MutableStateFlow<InitialScreenState>(InitialScreenState.Created)
+    private val screenStateFlow = MutableStateFlow<InitialScreenState?>(null)
     val screenState = screenStateFlow.asStateFlow()
 
-    fun onCreated() {
+    init {
         viewModelScope.launch(ioDispatcher) {
             screenStateFlow.emit(InitialScreenState.Loading)
 

@@ -4,7 +4,6 @@ import com.appic.matricapp.ui.screens.models.VehicleInfo
 import com.appic.matricapp.ui.screens.models.Vignette
 
 sealed interface InitialScreenState {
-    data object Created : InitialScreenState
     data object Loading : InitialScreenState
     data class Loaded(
         val nameVignettePairs: List<Pair<Int, Vignette>>,

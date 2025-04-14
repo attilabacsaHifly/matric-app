@@ -38,34 +38,30 @@ fun InitialScreen(
     val viewModel: InitialScreenViewModel = hiltViewModel()
     val screenState by viewModel.screenState.collectAsState()
 
-    InitialScreenContent(
-        screenState = screenState,
-        onCreated = { viewModel.onCreated() },
-        onNameVignettePairSelected = { viewModel.onNameVignettePairSelected(it) },
-        onConfirmPurchase = {
-            viewModel.onConfirmPurchase()
-            onConfirmPurchase()
-        },
-        onSelectCountyVignettes = {
-            onSelectCountyVignettes()
-            viewModel.clearSelection()
-        }
-    )
+    screenState?.let { state ->
+        InitialScreenContent(
+            screenState = state,
+            onNameVignettePairSelected = { viewModel.onNameVignettePairSelected(it) },
+            onConfirmPurchase = {
+                viewModel.onConfirmPurchase()
+                onConfirmPurchase()
+            },
+            onSelectCountyVignettes = {
+                onSelectCountyVignettes()
+                viewModel.clearSelection()
+            }
+        )
+    }
 }
 
 @Composable
 private fun InitialScreenContent(
     screenState: InitialScreenState,
-    onCreated: () -> Unit,
     onNameVignettePairSelected: (Pair<String, Vignette>) -> Unit,
     onConfirmPurchase: () -> Unit,
     onSelectCountyVignettes: () -> Unit
 ) {
     when (screenState) {
-        InitialScreenState.Created -> {
-            onCreated()
-        }
-
         InitialScreenState.Error -> {
             InitialScreenErrorContent()
         }
@@ -186,7 +182,6 @@ private fun InitialScreenContentPreview() {
                 ),
                 selectedNameVignettePair = null
             ),
-            onCreated = {},
             onNameVignettePairSelected = {},
             onSelectCountyVignettes = {},
             onConfirmPurchase = {}
